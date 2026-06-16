@@ -1,0 +1,626 @@
+id,dept,sem,lang,title,desc,code
+1,CS,S6,language-c,Basic Networking Commands,Perform basic network analysis and troubleshooting using CLI commands.,""
+2,CS,S6,language-c,Socket Programming,Introduction to building basic network sockets.,""
+3,CS,S6,language-c,Transmission Control Protocol,Implements a reliable connection-oriented client-server communication using TCP.,"//===FILE: server.c
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+int main(void) {
+int server_sock, client_sock, client_size;
+struct sockaddr_in server_addr, client_addr;
+char server_msg[2000], client_msg[2000];
+memset(server_msg, '\0', sizeof(server_msg));
+memset(client_msg, '\0', sizeof(client_msg));
+server_sock = socket(AF_INET, SOCK_STREAM, 0);
+if (server_sock < 0) { printf(""Socket creation failed\n""); return -1; }
+printf(""Socket created\n"");
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(2000);
+server_addr.sin_addr.s_addr = inet_addr(""127.0.0.1"");
+if (bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+printf(""Bind failed\n""); return -1;
+}
+printf(""Bind done\n"");
+if (listen(server_sock, 1) < 0) { printf(""Listen failed\n""); return -1; }
+printf(""Listening on port 2000...\n"");
+client_size = sizeof(client_addr);
+client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_size);
+if (client_sock < 0) { printf(""Accept failed\n""); return -1; }
+printf(""Client connected: %s:%d\n"", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+if (recv(client_sock, client_msg, sizeof(client_msg), 0) < 0) {
+printf(""Receive failed\n""); return -1;
+}
+printf(""Client says: %s\n"", client_msg);
+strcpy(server_msg, ""Hello from server!"");
+if (send(client_sock, server_msg, strlen(server_msg), 0) < 0) {
+printf(""Send failed\n""); return -1;
+}
+close(client_sock);
+close(server_sock);
+return 0;
+}
+//===FILE: client.c
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+int main(void) {
+int socket_desc;
+struct sockaddr_in server_addr;
+char server_msg[2000], client_msg[2000];
+memset(server_msg, '\0', sizeof(server_msg));
+memset(client_msg, '\0', sizeof(client_msg));
+socket_desc = socket(AF_INET, SOCK_STREAM, 0);
+if (socket_desc < 0) { printf(""Socket creation failed\n""); return -1; }
+printf(""Socket created\n"");
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(2000);
+server_addr.sin_addr.s_addr = inet_addr(""127.0.0.1"");
+if (connect(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+printf(""Connection failed\n""); return -1;
+}
+printf(""Connected to server\n"");
+printf(""Enter message: "");
+fgets(client_msg, sizeof(client_msg), stdin);
+if (send(socket_desc, client_msg, strlen(client_msg), 0) < 0) {
+printf(""Send failed\n""); return -1;
+}
+if (recv(socket_desc, server_msg, sizeof(server_msg), 0) < 0) {
+printf(""Receive failed\n""); return -1;
+}
+printf(""Server says: %s\n"", server_msg);
+close(socket_desc);
+return 0;
+}"
+4,CS,S6,language-c,User Datagram Protocol,Implements a connectionless client-server communication using UDP.,"//===FILE: server.c
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+int main(void) {
+int socket_desc;
+struct sockaddr_in server_addr, client_addr;
+char server_message [2000], client_message[2000];
+int client_struct_length = sizeof(client_addr);
+memset(server_message, '\0', sizeof(server_message));
+memset(client_message, '\0', sizeof(client_message));
+socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+if (socket_desc < 0) { printf(""Error creating socket\n""); return -1; }
+printf(""Socket created successfully\n"");
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(2000);
+server_addr.sin_addr.s_addr = inet_addr(""127.0.0.1"");
+if (bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+printf(""Bind failed\n""); return -1;
+}
+printf(""Listening for messages...\n\n"");
+if (recvfrom(socket_desc, client_message, sizeof(client_message), 0, (struct sockaddr*)&client_addr, &client_struct_length) < 0) {
+printf(""Receive failed\n""); return -1;
+}
+printf(""Received from %s:%i -> %s\n"", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), client_message);
+strcpy(server_message, client_message);
+if (sendto(socket_desc, server_message, strlen(server_message), 0, (struct sockaddr*)&client_addr, client_struct_length) < 0) {
+printf(""Send failed\n""); return -1;
+}
+close(socket_desc);
+return 0;
+}
+//===FILE: client.c
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+int main(void) {
+int socket_desc;
+struct sockaddr_in server_addr;
+char server_message [2000], client_message[2000];
+int server_struct_length = sizeof(server_addr);
+memset(server_message, '\0', sizeof(server_message));
+memset(client_message, '\0', sizeof(client_message));
+socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+if (socket_desc < 0) { printf(""Error creating socket\n""); return -1; }
+printf(""Socket created successfully\n"");
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(2000);
+server_addr.sin_addr.s_addr = inet_addr(""127.0.0.1"");
+printf(""Enter message: "");
+fgets(client_message, sizeof(client_message), stdin);
+if (sendto(socket_desc, client_message, strlen(client_message), 0, (struct sockaddr*)&server_addr, server_struct_length) < 0) {
+printf(""Send failed\n""); return -1;
+}
+if (recvfrom(socket_desc, server_message, sizeof(server_message), 0, (struct sockaddr*)&server_addr, &server_struct_length) < 0) {
+printf(""Receive failed\n""); return -1;
+}
+printf(""Server's response: %s\n"", server_message);
+close(socket_desc);
+return 0;
+}"
+5,CS,S6,language-c,Stop and Wait Protocol,Simulates flow control using a simple Stop and Wait protocol mechanism.,"//===FILE: server.c
+#include<stdio.h>
+#include<string.h>
+#include<sys/socket.h>
+#include<arpa/inet.h>
+#include<unistd.h>
+int main(void){
+int socket_desc, client_sock,client_size;
+struct sockaddr_in server_addr,client_addr;
+char server_message [2000],client_message[2000];
+memset(server_message,'\0', sizeof(server_message));
+memset(client_message, '\0',sizeof(client_message));
+socket_desc = socket(AF_INET, SOCK_STREAM,0);
+if(socket_desc < 0) {
+printf(""Error while creating a socket\n"");
+return -1;
+}
+server_addr.sin_family = AF_INET;
+server_addr.sin_port = htons(6500);
+server_addr.sin_addr.s_addr = inet_addr(""127.0.0.1"");
+if(bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr))<0) {
+printf(""Error while binding\n"");
+return -1;
+}
+printf(""\nSocket successfully binded\n"");
+if(listen(socket_desc,1)<0) {
+printf(""Error while listening\n"");
+return -1;
+}
+printf(""\nListening for connections....\n"");
+client_size = sizeof(client_addr);
+client_sock = accept(socket_desc, (struct sockaddr*)&client_addr,&client_size);
+if(client_sock<0) {
+printf(""Error\n"");
+return -1;
+}
+printf(""\nConnection accepted successfully \n"");
+printf(""client ip: %s\nclient port: %i\n"", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+while(1){
+memset(server_message, '\0', sizeof(server_message));
+memset(client_message, '\0', sizeof(client_message));
+int bytes_received = recv(client_sock, client_message, sizeof(client_message), 0);
+if(bytes_received == 0) {
+printf(""\n[Notice] Client disconnected gracefully. Ending session.\n"");
+break;
+}
+if(bytes_received < 0) {
+printf(""Error while receiving data\n"");
+break;
+}
+printf(""Client's message: %s\n"", client_message);
+do {
+memset(server_message, '\0', sizeof(server_message));
+printf(""Enter Y for ACK and N for NACK: "");
+scanf(""%s"", server_message);
+if (strcmp(server_message, ""Y"") != 0 && strcmp(server_message, ""N"") != 0) {
+printf(""Invalid input. Please enter 'Y' or 'N'.\n"");
+}
+} while(strcmp(server_message, ""Y"") != 0 && strcmp(server_message, ""N"") != 0);
+if(send(client_sock, server_message, strlen(server_message), 0) < 0) {
+printf(""Error while sending\n"");
+break;
+}
+printf(""%s sent\n"", strcmp(server_message, ""Y"") == 0 ? ""ACK"": ""NACK"");
+}
+close(client_sock);
+close(socket_desc);
+return 0;
+}"
+6,CS,S6,language-c,Selective Repeat,Simulates the Selective Repeat sliding window protocol with individual ACKs.,"//===FILE: server.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <time.h>
+#define MAX 80
+#define PORT 8080
+#define MAX_FRAMES 100
+void sendAck(int sockfd, int ack){
+char buff[MAX];
+snprintf(buff, sizeof(buff), ""%d"", ack);
+send(sockfd, buff, sizeof(buff), 0);
+}
+int main(){
+int sockfd, connfd;
+struct sockaddr_in server_addr, client_addr;
+socklen_t len;
+char buff[MAX];
+int f;
+int received [MAX_FRAMES] = {0};
+int expectedBase = 0;
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+if(sockfd < 0){
+printf(""\nCreation of Socket Failed\n"");
+return -1;
+}
+printf(""\nSocket created successfully\n"");
+int opt = 1;
+setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = INADDR_ANY;
+server_addr.sin_port = htons(PORT);
+if(bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){
+printf(""\nBind Failed - port %d may already be in use\n"", PORT);
+close(sockfd);
+return -1;
+}
+listen(sockfd, 5);
+printf(""\nSR Server waiting...\n"");
+len = sizeof(client_addr);
+connfd = accept(sockfd, (struct sockaddr*)&client_addr, &len);
+srand(time(NULL));
+while(1){
+memset(buff, '\0', sizeof(buff));
+recv(connfd, buff, MAX, 0);
+if(strcmp(buff, ""EXIT"") == 0){
+printf(""\nClient exited\n"");
+break;
+}
+f = atoi(buff);
+if(f < 0 || f >= MAX_FRAMES) continue;
+int c = rand() % 3;
+if(c == 0){
+printf(""\nFrame %d is lost (no ACK)\n"", f);
+continue;
+} else if(c == 1){
+sleep(2);
+}
+if(!received[f]){
+received [f] = 1;
+printf(""\nFrame %d received and buffered\n"", f);
+} else {
+printf(""\nFrame %d already received (duplicate), re-ACKing\n"", f);
+}
+sendAck(connfd, f);
+printf(""ACK sent for frame: %d\n"", f);
+while(expectedBase < MAX_FRAMES && received [expectedBase]){
+printf(""[App Layer] Delivered frame %d\n"", expectedBase);
+expectedBase++;
+}
+sleep(1);
+}
+close(connfd);
+close(sockfd);
+return 0;
+}
+//===FILE: client.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/time.h>
+#include <time.h>
+#define MAX 80
+#define PORT 8080
+#define MAX_FRAMES 100
+int main(){
+int sockfd, nf, ws;
+struct sockaddr_in server_addr;
+char buff[MAX];
+int w1 = 0, w2, i, n;
+int acked[MAX_FRAMES] = {0};
+struct timeval timeout;
+timeout.tv_sec = 3;
+timeout.tv_usec = 0;
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+if(sockfd < 0){
+printf(""\nCreation of Socket Failed\n"");
+return -1;
+}
+printf(""\nSocket created successfully\n"");
+setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = INADDR_ANY;
+server_addr.sin_port = htons(PORT);
+connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+printf(""\nEnter no. of frames: "");
+scanf(""%d"", &nf);
+if(nf > MAX_FRAMES) nf = MAX_FRAMES;
+printf(""\nEnter window size: "");
+scanf(""%d"", &ws);
+w2 = w1 + ws - 1;
+while(w1 < nf){
+for(i = w1; i <= w2 && i < nf; i++){
+if(!acked[i]){
+snprintf(buff, sizeof(buff), ""%d"", i);
+send(sockfd, buff, sizeof(buff), 0);
+printf(""\nFrame %d sent\n"", i);
+sleep(1);
+}
+}
+while(1){
+memset(buff, '\0', sizeof(buff));
+n = recv(sockfd, buff, MAX, 0);
+if(n > 0){
+int ack = atoi(buff);
+printf(""\nAck received for %d\n"", ack);
+if(ack >= 0 && ack < nf){
+acked[ack] = 1;
+}
+while(w1 < nf && acked[w1]){
+w1++;
+}
+w2 = w1 + ws - 1;
+if(w1 >= nf){
+printf(""\nAll Frames sent\n"");
+strcpy(buff, ""EXIT"");
+send(sockfd, buff, sizeof(buff), 0);
+close(sockfd);
+return 0;
+}
+break;
+} else {
+printf(""Timeout -> Resending only unACKed frames [%d to %d]\n"", w1, w2);
+for(i = w1; i <= w2 && i < nf; i++){
+if(!acked[i]){
+snprintf(buff, sizeof(buff), ""%d"", i);
+send(sockfd, buff, sizeof(buff), 0);
+printf(""\nFrame %d resent\n"", i);
+sleep(1);
+}
+}
+}
+}
+}
+strcpy(buff, ""EXIT"");
+send(sockfd, buff, sizeof(buff), 0);
+close(sockfd);
+printf(""All frames acknowledged. Client terminating.\n"");
+return 0;
+}"
+7,CS,S6,language-c,Go Back N,Simulates the Go-Back-N sliding window protocol for reliable data transfer.,"//===FILE: server.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <time.h>
+#define MAX 80
+#define PORT 8080
+void sendAck(int sockfd, int ack){
+char buff[MAX];
+snprintf(buff, sizeof(buff), ""%d"", ack);
+send(sockfd, buff, sizeof(buff), 0);
+}
+int main(){
+int sockfd, connfd;
+struct sockaddr_in server_addr, client_addr;
+socklen_t len;
+char buff[MAX];
+int f, next = 0;
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+if(sockfd < 0){
+printf(""\nCreation of Socket Failed\n"");
+return -1;
+}
+printf(""\nSocket created successfully\n"");
+int opt = 1;
+setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = INADDR_ANY;
+server_addr.sin_port = htons(PORT);
+if(bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){
+printf(""\nBind Failed - port %d may already be in use\n"", PORT);
+close(sockfd);
+return -1;
+}
+listen(sockfd, 5);
+printf(""\nGBN Server waiting...\n"");
+len = sizeof(client_addr);
+connfd = accept(sockfd, (struct sockaddr*)&client_addr, &len);
+srand(time(NULL));
+while(1){
+memset(buff, '\0', sizeof(buff));
+recv(connfd, buff, MAX, 0);
+if(strcmp(buff, ""EXIT"") == 0){
+printf(""\nClient exited\n"");
+break;
+}
+f = atoi(buff);
+if(f != next){
+printf(""\nFrame %d discarded, expected(%d), ack sent for %d\n"", f, next, next - 1);
+sendAck(connfd, next - 1);
+continue;
+}
+int c = rand() % 3;
+if(c == 0){
+printf(""\nFrame %d is lost (no ACK)\n"", f);
+continue;
+} else if(c == 1){
+sleep(2);
+}
+printf(""\nFrame %d received, ACK sent: %d\n"", f, f);
+sendAck(connfd, f);
+sleep(1);
+next++;
+}
+close(connfd);
+close(sockfd);
+return 0;
+}
+//===FILE: client.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/time.h>
+#include <time.h>
+#define MAX 80
+#define PORT 8080
+int main(){
+int sockfd, nf, ws;
+struct sockaddr_in server_addr;
+char buff[MAX];
+int ack = -1, w1 = 0, w2, i, n;
+struct timeval timeout;
+timeout.tv_sec = 3;
+timeout.tv_usec = 0;
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+if(sockfd < 0){
+printf(""\nCreation of Socket Failed\n"");
+return -1;
+}
+printf(""\nSocket created successfully\n"");
+setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+server_addr.sin_family = AF_INET;
+server_addr.sin_addr.s_addr = INADDR_ANY;
+server_addr.sin_port = htons(PORT);
+connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+printf(""\nEnter no. of frames: "");
+scanf(""%d"", &nf);
+printf(""\nEnter window size: "");
+scanf(""%d"", &ws);
+w2 = ws - 1;
+while(1){
+for(i = w1; i <= w2 && i < nf; i++){
+snprintf(buff, sizeof(buff), ""%d"", i);
+send(sockfd, buff, sizeof(buff), 0);
+printf(""\nFrame %d sent\n"", i);
+sleep(1);
+}
+while(1){
+memset(buff, '\0', sizeof(buff));
+n = recv(sockfd, buff, MAX, 0);
+if(n > 0){
+ack = atoi(buff);
+printf(""\nAck received for %d\n"", ack);
+if(ack == nf - 1){
+printf(""\nAll Frames sent\n"");
+strcpy(buff, ""EXIT"");
+send(sockfd, buff, sizeof(buff), 0);
+close(sockfd);
+return 0;
+}
+w1 = ack + 1;
+w2 = w1 + ws - 1;
+break;
+} else {
+printf(""Timeout happened -> Resending all Frames [%d to %d]\n"", w1, w2);
+for(i = w1; i <= w2 && i < nf; i++){
+snprintf(buff, sizeof(buff), ""%d"", i);
+send(sockfd, buff, sizeof(buff), 0);
+printf(""\nFrame %d sent\n"", i);
+sleep(1);
+}
+}
+}
+}
+}"
+8,CS,S6,language-c,Distance Vector Routing,Simulate Distance Vector Routing protocol.,""
+9,CS,S6,language-c,Simple Mail Transfer Protocol,Simulate SMTP protocol execution.,""
+10,CS,S6,language-c,File Transfer Protocol,Implements a simple File Transfer Protocol (FTP) for reading remote server files.,"//===FILE: server.c
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#define PORT 2000
+#define BUFFER_SIZE 300
+int main(void) {
+struct sockaddr_in clientaddr, serveraddr;
+int serversock, newserversock;
+socklen_t clientsize;
+int n, f;
+char filename[100], filedata [BUFFER_SIZE];
+serversock = socket(AF_INET, SOCK_STREAM, 0);
+if (serversock < 0) {
+perror(""Socket creation failed"");
+return 1;
+}
+memset(&serveraddr, 0, sizeof(serveraddr));
+serveraddr.sin_family = AF_INET;
+serveraddr.sin_port = htons(PORT);
+serveraddr.sin_addr.s_addr = INADDR_ANY;
+if (bind(serversock, (struct sockaddr*)&serveraddr, sizeof(serveraddr)) < 0) {
+perror(""Bind failed"");
+close(serversock);
+return 1;
+}
+listen(serversock, 5);
+printf(""Server listening on port %d...\n"", PORT);
+while (1) {
+clientsize = sizeof(clientaddr);
+newserversock = accept(serversock, (struct sockaddr*)&clientaddr, &clientsize);
+if (newserversock < 0) continue;
+memset(filename, 0, sizeof(filename));
+memset(filedata, 0, sizeof(filedata));
+n = read(newserversock, filename, sizeof(filename) - 1);
+if (n <= 0) {
+close(newserversock);
+continue;
+}
+printf(""\nThe requested file from the client is: %s\n"", filename);
+f = open(filename, O_RDONLY);
+if (f < 0) {
+char *error_msg = ""Error: File not found on server."";
+write(newserversock, error_msg, strlen(error_msg));
+printf(""File '%s' not found. Error sent to client.\n"", filename);
+} else {
+n = read(f, filedata, BUFFER_SIZE - 1);
+if (n > 0) {
+filedata[n] = '\0';
+printf(""\nThe contents of the file being sent: \n%s\n"", filedata);
+write(newserversock, filedata, n);
+}
+close(f);
+}
+close(newserversock);
+}
+close(serversock);
+return 0;
+}
+//===FILE: client.c
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#define PORT 2000
+#define BUFFER_SIZE 300
+int main(void) {
+struct sockaddr_in serveraddr;
+int clientsock, rdret;
+char filename[50], filedata[BUFFER_SIZE];
+memset(&serveraddr, 0, sizeof(serveraddr));
+serveraddr.sin_family = AF_INET;
+serveraddr.sin_port = htons(PORT);
+serveraddr.sin_addr.s_addr = inet_addr(""127.0.0.1"");
+clientsock = socket(AF_INET, SOCK_STREAM, 0);
+if (clientsock < 0) {
+perror(""Socket creation failed"");
+return 1;
+}
+if (connect(clientsock, (struct sockaddr*)&serveraddr, sizeof(serveraddr)) < 0) {
+printf(""\nError: Cannot connect...\n"");
+close(clientsock);
+return 1;
+}
+printf(""Enter the name of the file: "");
+if (scanf(""%49s"", filename) != 1) return 1;
+write(clientsock, filename, strlen(filename) + 1);
+memset(filedata, 0, BUFFER_SIZE);
+rdret = read(clientsock, filedata, BUFFER_SIZE - 1);
+if (rdret > 0) {
+filedata[rdret] = '\0';
+printf(""\nThe contents of the file: \n\n"");
+printf(""%s\n"", filedata);
+} else {
+printf(""\nError: Could not read data from server (File might not exist).\n"");
+}
+close(clientsock);
+return 0;
+}"
+11,CS,S6,language-c,Leaky Bucket,Implementation of Leaky Bucket congestion control algorithm.,""

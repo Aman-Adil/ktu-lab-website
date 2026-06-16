@@ -1,0 +1,2980 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FMM8H6KLE2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-FMM8H6KLE2'); // <--- Make sure this matches your new ID
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>KTU Labs | S6 Reference Codes</title>
+    <meta name="description" content="Quick access to lab experiments and code for this week.">
+    <meta name="keywords" content="KTU labs, KTU lab code, CS lab manual, IT lab experiments">
+    <meta property="og:title" content="KTU Labs | S6 Reference Codes">
+    <meta property="og:description" content="Quick access to S6 lab experiments and reference code.">
+    <meta property="og:image" content="https://ktulab.pages.dev/preview.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://ktulab.pages.dev/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://ktulab.pages.dev/preview.jpg">
+    <meta name="twitter:url" content="https://ktulab.pages.dev/">
+
+    <meta property="og:url" content="https://ktulab.pages.dev/">
+    <link rel="canonical" href="https://ktulab.pages.dev/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="viva-data.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { brand: 'var(--brand)' } } }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        :root { --brand: #22c55e; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s ease, color 0.3s ease, transform 1.5s ease-in-out, filter 0.3s ease; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        .glass { @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-white/5; }
+        
+        @keyframes success-glow {
+            0% { box-shadow: 0 0 0 0px rgba(var(--brand), 0); border-color: var(--brand); }
+            50% { box-shadow: 0 0 40px 10px rgba(var(--brand), 0.4); border-color: var(--brand); }
+            100% { box-shadow: 0 0 0 0px rgba(var(--brand), 0); }
+        }
+        .card-copied { animation: success-glow 0.8s ease-out; }
+        .sidebar-item-active { background-color: var(--brand); color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        pre[class*="language-"] { margin: 0; background: transparent; padding: 1.5rem; font-size: 0.8rem; }
+        
+        /* Stealth / Privacy Mode */
+        
+
+        /* Easter Egg Styles */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-10px); } 50% { transform: translateX(10px); } }
+        .shake-active { animation: shake 0.4s ease-in-out; border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #ef4444 !important;}
+        .dark .shake-active { background-color: #450a0a !important; }
+        
+        @keyframes godModeGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        body.god-mode { background: linear-gradient(-45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); background-size: 400% 400%; animation: godModeGradient 15s ease infinite; }
+        body.god-mode .glass { background: rgba(0,0,0,0.6) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; }
+        body.god-mode .lab-card { background: rgba(0,0,0,0.8) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; box-shadow: 0 0 20px rgba(255,255,255,0.2) !important; }
+
+        body.matrix-active { background-color: #050505 !important; color: #00FF41 !important; }
+        body.matrix-active .glass, body.matrix-active .lab-card, body.matrix-active select, body.matrix-active input { background: rgba(0, 20, 0, 0.8) !important; border-color: #00FF41 !important; color: #00FF41 !important; }
+        body.matrix-active [id^="preview-"] { background: #000 !important; border-color: #00FF41 !important; }
+        body.matrix-active .text-slate-500, body.matrix-active .text-slate-400 { color: #008F11 !important; }
+
+        #gameCanvas { image-rendering: pixelated; }
+
+        .tab-active { @apply border-b-2 border-brand text-brand; }
+
+        @media print { 
+            .no-print, nav, aside, #studyHubWidget, #gameOverlay, #scratchpad, #jokeBanner, #matrixCanvas, #trailCanvas, #practiceOverlay { display: none !important; } 
+            body, main { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; width: 100% !important; } 
+            .lab-card { break-inside: avoid; border: 1px solid #ccc !important; box-shadow: none !important; margin-bottom: 2rem !important; padding: 1rem !important; background: white !important;} 
+            pre, code { white-space: pre-wrap !important; color: black !important; background: transparent !important; text-shadow: none !important; }
+            [id^="preview-"] { background: white !important; border: 1px solid #ddd !important; display: block !important; }
+        }
+
+        /* Pac-Man Loader */
+        #loader-container {
+            position: fixed; inset: 0;
+            background: #0b0f1a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.25rem;
+        }
+        #loader-container.hidden { display: none !important; }
+
+        .pacman-scene { display: flex; align-items: center; gap: 14px; }
+
+        /* Pac-Man: two rotating jaw halves */
+        .pacman {
+            width: 48px;
+            height: 48px;
+            position: relative;
+        }
+        .pacman::before, .pacman::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 48px;
+            height: 24px;
+            background: #eab308;
+        }
+        /* Top jaw */
+        .pacman::before {
+            top: 0;
+            border-radius: 24px 24px 0 0;
+            transform-origin: center bottom;
+            animation: jawTop 0.32s ease-in-out infinite alternate;
+        }
+        /* Bottom jaw */
+        .pacman::after {
+            bottom: 0;
+            border-radius: 0 0 24px 24px;
+            transform-origin: center top;
+            animation: jawBot 0.32s ease-in-out infinite alternate;
+        }
+        @keyframes jawTop { from { transform: rotate(-25deg); } to { transform: rotate(0deg); } }
+        @keyframes jawBot { from { transform: rotate(25deg);  } to { transform: rotate(0deg); } }
+
+        /* Dots */
+        .pac-dots { display: flex; gap: 10px; align-items: center; }
+        .pac-dots span {
+            display: block;
+            width: 10px; height: 10px;
+            background: #eab308;
+            border-radius: 50%;
+        }
+        .pac-dots span:nth-child(1) { animation: eatDot 0.96s ease-in-out 0.00s infinite; }
+        .pac-dots span:nth-child(2) { animation: eatDot 0.96s ease-in-out 0.32s infinite; }
+        .pac-dots span:nth-child(3) { animation: eatDot 0.96s ease-in-out 0.64s infinite; }
+        @keyframes eatDot {
+            0%   { opacity: 1;    transform: scale(1); }
+            30%  { opacity: 0.15; transform: scale(0.5); }
+            60%  { opacity: 1;    transform: scale(1); }
+            100% { opacity: 1;    transform: scale(1); }
+        }
+
+        /* Hide scrollbar on mobile nav */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Share FAB */
+        @keyframes fab-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+            50%       { box-shadow: 0 0 0 14px rgba(34,197,94,0); }
+        }
+        #shareFab { animation: fab-pulse 2.2s ease-in-out infinite; }
+
+        /* Toast Notification */
+        @keyframes toast-in  { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toast-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
+        #toastNotif { animation: toast-in 0.3s ease forwards; }
+        #toastNotif.hiding { animation: toast-out 0.3s ease forwards; }
+
+        /* Confetti Buttons & Ripples */
+        .cbtn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(255,255,255,0.3);
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+        }
+        .cbtn.fired::after {
+            animation: ripple .5s ease-out forwards;
+        }
+        @keyframes ripple {
+            to { opacity: 0; transform: scale(2.2); }
+        }
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 2px;
+            animation: confettiFall var(--dur) var(--ease) forwards;
+        }
+        @keyframes confettiFall {
+            0%   { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx),var(--ty)) rotate(var(--tr)) scale(0.3); }
+        }
+
+        /* 3D Holo Cards */
+        #home-view .grid {
+            perspective: 1000px;
+        }
+        #home-view .cbtn {
+            transform-style: preserve-3d;
+            transition: transform .08s ease-out, box-shadow .3s;
+            will-change: transform;
+        }
+        .card-holo {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: conic-gradient(
+                from var(--hue, 0deg) at var(--mx, 50%) var(--my, 50%),
+                #ff0080, #ff8800, #ffff00, #00ff80, #0080ff, #8000ff, #ff0080
+            );
+            opacity: var(--holo-opacity, 0);
+            mix-blend-mode: color-dodge;
+            transition: opacity .4s;
+            pointer-events: none;
+            z-index: 2;
+        }
+        #home-view .cbtn:hover .card-holo {
+            --holo-opacity: 0.18;
+        }
+        .card-shine {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(
+                circle at var(--mx, 50%) var(--my, 50%),
+                rgba(255,255,255,0.2) 0%,
+                rgba(255,255,255,0.05) 40%,
+                transparent 70%
+            );
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .3s;
+            z-index: 3;
+        }
+        #home-view .cbtn:hover .card-shine {
+            opacity: 1;
+        }
+
+        /* Rocket Share Button styles */
+        .rocket-share-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .rocket-share-btn:hover {
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.7);
+        }
+        .rocket-share-btn:hover .rocket-icon {
+            animation: rocketShake 0.4s ease-in-out infinite alternate;
+        }
+        @keyframes rocketShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(1px, -3px) rotate(5deg); }
+        }
+
+        /* Pulsating Green/Orange Glow for Attractors */
+        @keyframes pulseGlowGreen {
+            0% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.9); }
+            100% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
+        }
+        .pulse-glow-green {
+            animation: pulseGlowGreen 2s infinite;
+        }
+
+        @keyframes pulseGlowOrange {
+            0% { box-shadow: 0 0 8px rgba(249, 115, 22, 0.4); border-color: rgba(249, 115, 22, 0.4); }
+            50% { box-shadow: 0 0 22px rgba(249, 115, 22, 0.8); border-color: rgba(249, 115, 22, 0.8); }
+            100% { box-shadow: 0 0 8px rgba(249, 115, 22, 0.4); border-color: rgba(249, 115, 22, 0.4); }
+        }
+        .pulse-glow-orange {
+            animation: pulseGlowOrange 2s infinite;
+        }
+
+        /* 3D Flashcard Animation Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flashcard-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        /* Scoped to Viva Arcade full-screen view: always premium dark */
+        #viva-arcade-view .flashcard-front {
+            background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+        #viva-arcade-view .flashcard-back {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: #ffffff;
+            transform: rotateY(180deg);
+        }
+        #forgot-zone {
+            background: radial-gradient(circle at left center, rgba(244, 63, 94, 0.05) 0%, rgba(244, 63, 94, 0.01) 60%, transparent 100%);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        #forgot-zone:hover {
+            background: radial-gradient(circle at left center, rgba(244, 63, 94, 0.18) 0%, rgba(244, 63, 94, 0.04) 70%, transparent 100%);
+            box-shadow: inset 12px 0 20px -10px rgba(244, 63, 94, 0.3);
+        }
+        #got-it-zone {
+            background: radial-gradient(circle at right center, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.01) 60%, transparent 100%);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        #got-it-zone:hover {
+            background: radial-gradient(circle at right center, rgba(34, 197, 94, 0.18) 0%, rgba(34, 197, 94, 0.04) 70%, transparent 100%);
+            box-shadow: inset -12px 0 20px -10px rgba(34, 197, 94, 0.3);
+        }
+        .streak-bump {
+            animation: streak-bump-anim 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-color: rgba(244, 63, 94, 0.6) !important;
+            background-color: rgba(244, 63, 94, 0.25) !important;
+            box-shadow: 0 0 25px rgba(244, 63, 94, 0.5) !important;
+        }
+        @keyframes streak-bump-anim {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+        }
+        /* Tinder swipe styles */
+        .swipe-left {
+            transform: translateX(-150%) rotate(-15deg) !important;
+            opacity: 0 !important;
+        }
+        .swipe-right {
+            transform: translateX(150%) rotate(15deg) !important;
+            opacity: 0 !important;
+        }
+        #arcade-card-area {
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            will-change: transform, opacity;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-[#0b0f1a] text-slate-900 dark:text-slate-100 min-h-screen relative overflow-x-hidden">
+
+    <!-- Pac-Man Loader -->
+    <div id="loader-container">
+        <div class="pacman-scene">
+            <div class="pacman"></div>
+            <div class="pac-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <p
+            style="color:#22c55e; font-family:'JetBrains Mono',monospace,sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.25em; text-transform:uppercase;">
+            Fetching Lab Data...</p>
+    </div>
+
+    <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none hidden z-0 opacity-30"></canvas>
+    <canvas id="trailCanvas" class="fixed inset-0 pointer-events-none hidden z-[999]"></canvas>
+
+    <nav
+        class="sticky top-0 z-50 glass px-3 py-2 md:px-6 md:py-4 flex items-center justify-between gap-2 md:gap-4 border-b">
+        <button
+                    class="flex items-center gap-3 md:gap-4 hover:scale-[1.02] active:scale-95 transition-transform"
+                    onclick="handleBackButton()" title="Back to Home Selection">
+            <div class="bg-brand p-1.5 md:p-2 rounded-lg md:rounded-xl text-white transition-colors duration-300"><i
+                    data-lucide="code-2" class="w-4 h-4 md:w-5 md:h-5"></i></div>
+            <h1 class="text-sm sm:text-lg md:text-2xl font-black tracking-tighter">KTU<span
+                    class="text-brand transition-colors duration-300">LABS</span></h1>
+        </button>
+
+        <div class="relative flex-1 max-w-lg hidden md:block relative z-10">
+            <i data-lucide="search"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 matrix-text"></i>
+            <input type="text" id="searchInput" placeholder="Search experiments... (Ctrl+K)"
+                class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-brand/50 outline-none transition-all">
+        </div>
+
+        <!-- Mobile: search icon -->
+        <button id="mobileSearchBtn" onclick="toggleMobileSearch()"
+            class="md:hidden p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition" title="Search">
+            <i data-lucide="search" class="w-4 h-4 text-slate-500 dark:text-slate-400"></i>
+        </button>
+
+        <div class="flex items-center gap-1 md:gap-3 relative z-10 no-print">
+            <div class="hidden md:flex items-center gap-2 pr-4 border-r border-slate-200 dark:border-slate-800">
+                <button onclick="setTheme('#22c55e')"
+                    class="w-4 h-4 rounded-full bg-green-500 hover:scale-125 transition-transform"></button>
+                <button onclick="setTheme('#3b82f6')"
+                    class="w-4 h-4 rounded-full bg-blue-500 hover:scale-125 transition-transform"></button>
+                <button onclick="setTheme('#a855f7')"
+                    class="w-4 h-4 rounded-full bg-purple-500 hover:scale-125 transition-transform"></button>
+                <button onclick="setTheme('#f43f5e')"
+                    class="w-4 h-4 rounded-full bg-rose-500 hover:scale-125 transition-transform"></button>
+            </div>
+            <button onclick="toggleMatrixMode()"
+                class="p-1.5 md:p-3 rounded-lg md:rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+                title="Matrix Mode"><i data-lucide="terminal"
+                    class="w-4 h-4 md:w-5 md:h-5 text-emerald-500"></i></button>
+            <button onclick="toggleTheme()"
+                class="p-1.5 md:p-3 rounded-lg md:rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition"><i
+                    data-lucide="sun" class="hidden dark:block w-4 h-4 md:w-5 md:h-5 text-yellow-500"></i><i
+                    data-lucide="moon" class="block dark:hidden w-4 h-4 md:w-5 md:h-5 text-slate-600"></i></button>
+            <button onclick="openShareModal()"
+                class="rocket-share-btn hidden md:flex items-center justify-center gap-2 text-white font-black text-xs px-4 py-2.5 rounded-xl hover:scale-105 active:scale-95 transition-transform animate-pulse"
+                title="Share with Classmates">
+                <i data-lucide="rocket" class="rocket-icon w-4 h-4"></i>
+                <span class="hidden sm:inline">SHARE</span>
+            </button>
+            <div
+                class="flex items-center gap-1 md:gap-2 bg-brand/10 border border-brand/20 rounded-lg md:rounded-xl pl-2 md:pl-3 pr-1 md:pr-2 py-0.5 md:py-1 cursor-pointer hover:bg-brand/20 transition-colors relative">
+                <i data-lucide="layers" class="w-3.5 h-3.5 md:w-4 md:h-4 text-brand pointer-events-none"></i>
+                <select id="deptSelect" onchange="filterLabs(this.value)"
+                    class="bg-transparent border-none py-1 text-xs md:text-sm font-bold outline-none cursor-pointer text-brand dark:text-brand appearance-none pr-5 md:pr-6 w-full relative z-10">
+                    <option value="CS" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Computer
+                        Science</option>
+                    <option value="IT" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Information
+                        Tech</option>
+                    <option value="EC" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Electronics
+                        (EC)</option>
+                    <option value="ME" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Mechanical
+                        (ME)</option>
+                    <option value="CE" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Civil (CE)
+                    </option>
+                    <option value="EEE" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Electrical
+                        (EEE)</option>
+                    <option value="AI" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Artificial Intelligence (AI)</option>
+                </select>
+                <i data-lucide="chevron-down"
+                    class="w-3.5 h-3.5 md:w-4 md:h-4 text-brand absolute right-2 md:right-3 pointer-events-none z-0"></i>
+            </div>
+        </div>
+    </nav>
+    <!-- Mobile Search Bar (revealed on search icon tap) -->
+    <div id="mobileSearchBar"
+        class="hidden md:hidden px-4 py-2 bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-white/10 backdrop-blur-xl sticky top-[69px] z-40">
+        <div class="relative">
+            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+            <input type="text" id="searchInputMobile" placeholder="Search experiments..."
+                oninput="document.getElementById('searchInput').value=this.value; renderLabs(this.value);"
+                class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-brand/50 outline-none transition-all">
+        </div>
+    </div>
+
+    <div class="flex max-w-[1600px] mx-auto relative z-10">
+        <aside
+            class="w-full lg:w-64 fixed bottom-0 left-0 lg:bottom-auto lg:top-20 h-auto lg:h-[calc(100vh-80px)] overflow-x-auto lg:overflow-y-auto p-3 lg:p-6 flex lg:block items-center gap-2 lg:gap-0 border-t lg:border-t-0 lg:border-r border-slate-200 dark:border-white/5 no-print glass border-none bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-[100]">
+            <button onclick="toggleFavoritesMode()" id="favToggleBtn"
+                class="flex-shrink-0 lg:w-full flex items-center gap-2 lg:gap-3 px-4 py-3 lg:py-3.5 rounded-xl text-sm font-bold transition-all lg:mb-6 bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 hover:bg-yellow-500/20"><i
+                    data-lucide="star" class="w-4 h-4"></i> <span class="hidden lg:inline">Saved
+                    Favorites</span></button>
+            <p class="hidden lg:block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Select
+                Semester</p>
+            <div class="flex lg:block space-x-2 lg:space-x-0 lg:space-y-2 flex-1 overflow-x-auto hide-scrollbar"
+                id="semList"></div>
+            <div class="relative mt-0 lg:mt-6 flex-shrink-0 lg:w-full group cursor-pointer"
+                onclick="showVedikettuView()">
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse">
+                </div>
+                <button id="vedikettuSidebarBtn"
+                    class="pulse-glow-orange border border-transparent relative flex w-full items-center justify-center lg:justify-start gap-2 lg:gap-3 px-4 py-3 lg:py-3.5 rounded-xl bg-white dark:bg-slate-900 text-sm font-black transition-all shadow-sm">
+                    <span
+                        class="hidden lg:inline text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">🧨
+                        VEDIKETTU SECTION 🔥</span>
+                    <span
+                        class="lg:hidden text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">🧨
+                        VEDIKETTU</span>
+                </button>
+            </div>
+
+            <div class="relative mt-2 lg:mt-4 flex-shrink-0 lg:w-full group cursor-pointer"
+                onclick="openArcadeFromSidebar()">
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse">
+                </div>
+                <button id="arcadeSidebarBtn"
+                    class="pulse-glow-orange border border-transparent relative flex w-full items-center justify-center lg:justify-start gap-2 lg:gap-3 px-4 py-3 lg:py-3.5 rounded-xl bg-white dark:bg-slate-900 text-sm font-black transition-all shadow-sm">
+                    <span
+                        class="hidden lg:inline text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500">🎮
+                        VIVA ARCADE ⚡</span>
+                    <span
+                        class="lg:hidden text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500">🎮
+                        ARCADE</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 lg:ml-64 p-4 md:p-10 pb-24 lg:pb-10">
+
+            <!-- Vedikettu View -->
+            <div id="vedikettu-view" class="hidden animate-[toast-in_0.3s_ease_forwards]">
+                <div class="relative mb-10 group">
+                    <div
+                        class="absolute -inset-1 bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 rounded-2xl blur-lg opacity-75 animate-pulse">
+                    </div>
+                    <div
+                        class="relative p-8 text-center bg-white dark:bg-slate-900 border border-red-500/20 rounded-2xl shadow-xl">
+                        <h2
+                            class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-400 mb-3">
+                            🧨 Vedikettu Exam Bits 🔥</h2>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm md:text-base font-medium">Select your
+                            stream. Missing notes? Contribute them!</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
+                    <button onclick="openPdfModal('vedikettu-cs.pdf', 'CS Exam Bits')"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg hover:scale-105 transition-transform duration-300 w-full">
+                        <i data-lucide="file-down"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">CS Exam Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm">
+                            PDF</div>
+                    </button>
+
+                    <button onclick="openContributeModal()"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-white shadow-lg hover:scale-105 transition-transform duration-300">
+                        <i data-lucide="plus-circle"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">IT Exam Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i> Contribute</div>
+                    </button>
+
+                    <button onclick="openPdfModal('vedikettu-ec.pdf', 'EC Exam Bits')"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-700 text-white shadow-lg hover:scale-105 transition-transform duration-300 w-full">
+                        <i data-lucide="file-down"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">EC Exam Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm">
+                            PDF</div>
+                    </button>
+
+                    <button onclick="openContributeModal()"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-slate-600 to-slate-800 text-white shadow-lg hover:scale-105 transition-transform duration-300">
+                        <i data-lucide="plus-circle"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">Mechanical Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i> Contribute</div>
+                    </button>
+
+                    <button onclick="openContributeModal()"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-amber-700 to-yellow-900 text-white shadow-lg hover:scale-105 transition-transform duration-300">
+                        <i data-lucide="plus-circle"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">Civil Exam Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i> Contribute</div>
+                    </button>
+
+                    <button onclick="openContributeModal()"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-white shadow-lg hover:scale-105 transition-transform duration-300">
+                        <i data-lucide="plus-circle"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">EEE Exam Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i> Contribute</div>
+                    </button>
+
+                    <button onclick="openContributeModal()"
+                        class="relative overflow-hidden group flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-fuchsia-600 to-pink-800 text-white shadow-lg hover:scale-105 transition-transform duration-300">
+                        <i data-lucide="plus-circle"
+                            class="w-10 h-10 mb-3 opacity-90 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xl font-black tracking-wide">AI Exam Bits</span>
+                        <div
+                            class="absolute top-3 right-3 bg-white/20 text-xs px-2 py-1 rounded font-bold backdrop-blur-sm flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i> Contribute</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- HOME VIEW: Department Selection Dashboard -->
+            <div id="home-view" class="relative z-10 animate-[toast-in_0.3s_ease_forwards]">
+                <div class="mb-10 text-center">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-3">Choose Your Department</h2>
+                    <p class="text-slate-300 font-medium">Select a branch to browse its lab experiments.</p>
+                </div>
+                <div id="homeDeptGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-2 pb-16">
+                </div>
+            </div>
+
+
+            <!-- Main Lab View -->
+            <div id="mainLabView" class="px-4 md:px-8 hidden">
+                <div class="flex flex-col-reverse md:flex-row gap-4 w-full relative mb-8">
+                    <div id="jokeBanner"
+                        class="p-4 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-between gap-4 no-print flex-1">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">🤖</span>
+                            <p id="jokeText" class="text-sm font-medium text-slate-700 dark:text-slate-300 matrix-text">
+                                Loading daily wisdom...</p>
+                        </div>
+                        <button onclick="document.getElementById('jokeBanner').style.display='none'"
+                            class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x"
+                                class="w-4 h-4"></i></button>
+                    </div>
+
+                    <div id="studyHubWidget"
+                        class="relative md:absolute md:top-0 md:right-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl z-[2000] flex flex-col no-print w-full md:w-72 overflow-hidden transition-all duration-300">
+                        <div
+                            class="flex items-center justify-between border-b border-slate-200 dark:border-white/10 p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            <div id="studyHubDragHandle"
+                                class="flex items-center gap-2 font-black text-sm tracking-wide text-brand cursor-move flex-1">
+                                <i data-lucide="brain" class="w-4 h-4 pointer-events-none"></i>
+                                <span class="pointer-events-none">Study Hub</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span id="miniTimerDisplay"
+                                    class="font-black code-font text-slate-800 dark:text-white tracking-widest text-xs">25:00</span>
+                                <button onclick="toggleStudyHub()" class="text-slate-400 hover:text-brand transition"
+                                    title="Minimize/Expand">
+                                    <i id="studyHubToggleIcon" data-lucide="chevron-down" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="studyHubBody" class="p-4 flex flex-col gap-4 hidden">
+                            <div class="text-center">
+                                <div id="timerDisplay"
+                                    class="text-4xl font-black code-font text-slate-800 dark:text-white mb-2 tracking-widest">
+                                    25:00</div>
+                                <p id="timerLabel"
+                                    class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Focus
+                                    Session</p>
+                                <div class="flex justify-center gap-2">
+                                    <button onclick="startTimer()" id="startTimerBtn"
+                                        class="bg-brand text-white px-4 py-2 rounded-xl text-xs font-black hover:opacity-90 transition"><i
+                                            data-lucide="play" class="w-4 h-4 inline"></i> START</button>
+                                    <button onclick="resetTimer()"
+                                        class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-xs font-black hover:opacity-90 transition"><i
+                                            data-lucide="rotate-ccw" class="w-4 h-4 inline"></i></button>
+                                </div>
+                                <div class="flex justify-center mt-3">
+                                    <button onclick="skipStudy()"
+                                        class="text-[10px] text-slate-400 hover:text-brand transition font-bold uppercase tracking-wider underline">Skip
+                                        Study</button>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-slate-200 dark:border-white/10 pt-3 flex justify-between gap-2">
+                                <button onclick="toggleAudio('rain')" id="rainBtn"
+                                    class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-500 py-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 hover:text-brand transition"><i
+                                        data-lucide="cloud-rain" class="w-4 h-4"></i> Rain</button>
+                                <button onclick="toggleAudio('brown')" id="brownBtn"
+                                    class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-500 py-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 hover:text-brand transition"><i
+                                        data-lucide="waves" class="w-4 h-4"></i> Brown Noise</button>
+                            </div>
+
+                            <audio id="audio-rain" loop
+                                src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Rain_sounds.ogg"></audio>
+                            <audio id="audio-brown" loop
+                                src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Brown_noise.ogg"></audio>
+                        </div>
+                    </div>
+                </div>
+
+                <header class="flex flex-wrap justify-between items-end gap-6 mb-10">
+                    <div class="flex items-center gap-4">
+                        <button onclick="handleBackButton()"
+                            class="flex items-center gap-2 text-xs font-black text-slate-800 dark:text-slate-100 bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 px-4 py-2.5 rounded-xl uppercase tracking-widest transition-all no-print shadow-sm hover:shadow backdrop-blur-sm border border-slate-200 dark:border-white/5">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i> All Departments
+                        </button>
+                        <div>
+                            <h2 id="pageTitle"
+                                class="text-4xl font-extrabold text-slate-900 dark:text-white matrix-text">Semester 6
+                                Labs</h2>
+                            <p id="pageSubtitle" class="text-slate-500 text-sm font-medium matrix-text mt-2">Showing all
+                                approved experiments</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center gap-2 bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm no-print">
+                        <button id="masterPreviewBtn" onclick="toggleAllPreviews()"
+                            class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all bg-slate-100 dark:bg-slate-800 text-brand"><i
+                                data-lucide="eye" class="w-4 h-4"></i> <span id="masterToggleText">Preview:
+                                ON</span></button>
+                        <div class="w-[1px] h-8 bg-slate-200 dark:bg-white/10 mx-1"></div>
+                        <button onclick="printCheatSheet()"
+                            class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-700 dark:text-slate-300 matrix-text"><i
+                                data-lucide="printer" class="w-4 h-4"></i> Print Cheat Sheet</button>
+                    </div>
+                </header>
+
+                <div id="experimentGrid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 lg:gap-8 pb-32 transition-all duration-300">
+                </div>
+        </main>
+    </div>
+
+
+
+    <div id="scratchpad"
+        class="fixed bottom-6 right-8 w-[400px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl z-[80] hidden flex flex-col no-print transition-all">
+        <div
+            class="flex justify-between p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/50 rounded-t-2xl">
+            <div class="font-black text-sm text-brand"><i data-lucide="edit-3" class="w-4 h-4 inline"></i> Scratchpad
+            </div><button onclick="closeScratchpad()" class="text-slate-400 hover:text-red-500"><i data-lucide="x"
+                    class="w-5 h-5"></i></button>
+        </div>
+        <textarea id="scratchpadText"
+            class="w-full h-64 p-4 bg-transparent outline-none code-font text-sm resize-none text-slate-800 dark:text-slate-200"
+            spellcheck="false"></textarea>
+        <div class="p-4 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/50 rounded-b-2xl">
+            <button onclick="copyFromScratchpad()" id="scratchpadCopyBtn"
+                class="w-full bg-brand text-white font-black py-3 rounded-xl hover:opacity-90 transition">COPY EDITED
+                CODE</button></div>
+    </div>
+
+    <div id="practiceOverlay"
+        class="fixed inset-0 bg-slate-50 dark:bg-[#0b0f1a] z-[1000] hidden flex flex-col no-print transition-all">
+        <div class="flex items-center justify-between px-6 py-4 glass border-b border-slate-200 dark:border-white/10">
+            <h2 class="text-xl font-black flex items-center gap-2"><i data-lucide="code" class="w-5 h-5 text-brand"></i>
+                Home Studio IDE</h2>
+            <div class="flex items-center gap-4">
+                <button onclick="runFakeTerminal()" id="runCodeBtn"
+                    class="bg-brand text-white px-6 py-2 rounded-xl font-black text-sm flex items-center gap-2 hover:scale-105 transition"><i
+                        data-lucide="play" class="w-4 h-4"></i> Run Code</button>
+                <button onclick="closePractice()"
+                    class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm hover:bg-slate-300 transition">Exit
+                    Studio</button>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
+            <div
+                class="w-full lg:w-1/2 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-white/10 bg-[#1d1f21] h-1/2 lg:h-auto">
+                <div class="flex border-b border-white/10 bg-black/20">
+                    <button onclick="switchStudioTab('code')" id="tab-code"
+                        class="px-6 py-3 text-xs font-black uppercase tracking-widest text-slate-400 tab-active hover:text-white transition">Reference</button>
+                    <button onclick="switchStudioTab('algo')" id="tab-algo"
+                        class="px-6 py-3 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white transition">Algorithm</button>
+                    <button onclick="switchStudioTab('notes')" id="tab-notes"
+                        class="px-6 py-3 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white transition">My
+                        Notes</button>
+                </div>
+
+                <div class="p-6 flex-1 overflow-y-auto">
+                    <div id="pane-code">
+                        <pre
+                            class="overflow-x-auto"><code id="practiceReference" class="code-font text-sm"></code></pre>
+                    </div>
+                    <div id="pane-algo" class="hidden text-slate-300 space-y-4">
+                        <h3 id="algoTitle" class="text-lg font-bold text-brand mb-2">Step-by-Step Algorithm</h3>
+                        <ol id="algoList"
+                            class="list-decimal pl-5 space-y-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
+                        </ol>
+                        <p id="algoNote" class="text-xs text-slate-500 italic mt-4"></p>
+                    </div>
+                    <div id="pane-notes" class="hidden h-full">
+                        <textarea id="studioNotes" placeholder="Type theory notes, viva questions, or reminders here..."
+                            class="w-full h-full bg-transparent outline-none text-sm text-slate-300 resize-none font-sans"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/2 flex flex-col relative bg-[#0b0f1a] h-1/2 lg:h-auto">
+                <div class="p-4 border-b border-white/5 bg-black/20 flex items-center justify-between">
+                    <p class="text-xs font-black text-brand uppercase tracking-widest">editor.js</p>
+                </div>
+                <textarea id="practiceInput"
+                    class="flex-1 w-full p-6 bg-transparent outline-none code-font text-sm text-slate-100 resize-none"
+                    placeholder="// Start writing your code here..."></textarea>
+
+                <div class="h-1/3 bg-black border-t border-white/10 flex flex-col font-mono text-sm">
+                    <div class="px-4 py-2 bg-[#1a1a1a] flex items-center gap-2 border-b border-white/10">
+                        <i data-lucide="terminal" class="w-4 h-4 text-slate-400"></i>
+                        <span class="text-xs text-slate-400 uppercase tracking-widest font-bold">Terminal /
+                            Output</span>
+                    </div>
+                    <div id="terminalOutput" class="p-4 text-slate-300 overflow-y-auto flex-1">
+                        <span class="text-brand">student@ktulabs:~$</span> ready for execution...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameOverlay"
+        class="fixed inset-0 bg-slate-950 z-[2500] hidden flex flex-col items-center justify-center no-print">
+        <h2 class="text-4xl font-black text-white mb-2 tracking-tighter">BREAK TIME</h2>
+        <p class="text-slate-400 font-medium mb-8">You studied hard. Relax for 5 minutes with some Snake.</p>
+        <div class="relative border-4 border-brand rounded-2xl shadow-[0_0_50px_rgba(34,197,94,0.3)] bg-black">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div id="gameOverScreen"
+                class="absolute inset-0 bg-black/80 hidden flex-col items-center justify-center rounded-xl">
+                <p class="text-white text-2xl font-black mb-4">GAME OVER</p>
+                <button onclick="resetGame()" class="bg-brand text-white px-6 py-2 rounded-xl font-bold">Play
+                    Again</button>
+            </div>
+        </div>
+        <div class="flex items-center gap-8 mt-8">
+            <p class="text-white font-bold font-mono text-xl">Score: <span id="gameScore" class="text-brand">0</span>
+            </p>
+            <p class="text-white font-bold font-mono text-xl">Break Time: <span id="breakTimerDisplay"
+                    class="text-blue-400">05:00</span></p>
+        </div>
+        <div class="flex flex-col items-center gap-2 mt-6 md:hidden">
+            <button ontouchstart="d='UP'" onclick="d='UP'"
+                class="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-xl text-white font-black text-xl flex items-center justify-center">↑</button>
+            <div class="flex gap-2">
+                <button ontouchstart="d='LEFT'" onclick="d='LEFT'"
+                    class="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-xl text-white font-black text-xl flex items-center justify-center">←</button>
+                <button ontouchstart="d='DOWN'" onclick="d='DOWN'"
+                    class="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-xl text-white font-black text-xl flex items-center justify-center">↓</button>
+                <button ontouchstart="d='RIGHT'" onclick="d='RIGHT'"
+                    class="w-14 h-14 bg-white/10 hover:bg-white/20 rounded-xl text-white font-black text-xl flex items-center justify-center">→</button>
+            </div>
+        </div>
+        <button onclick="skipBreak()"
+            class="mt-8 text-slate-500 hover:text-white transition font-bold text-sm underline">End Break Early & Back
+            to Study</button>
+    </div>
+
+    <div id="contributeModal"
+        class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[3000] hidden flex-col items-center justify-center no-print">
+        <div
+            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl w-full max-w-2xl overflow-hidden mx-4">
+            <div
+                class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/50">
+                <h2 class="text-xl font-black text-brand flex items-center gap-2"><i data-lucide="upload-cloud"
+                        class="w-6 h-6"></i> Contribute Code</h2>
+                <button onclick="closeContributeModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i
+                        data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+
+            <div id="contributeFormArea" class="p-6">
+                <form id="contributeForm" class="flex flex-col gap-4">
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Department</label>
+                            <select name="department"
+                                class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2 px-3 text-sm font-bold focus:ring-2 focus:ring-brand outline-none">
+                                <option value="CS">Computer Science</option>
+                                <option value="IT">Information Tech</option>
+                                <option value="EC">Electronics</option>
+                                <option value="ME">Mechanical</option>
+                                <option value="CE">Civil</option>
+                                <option value="EEE">Electrical</option>
+                                <option value="AI">Artificial Intelligence (AI)</option>
+                            </select>
+                        </div>
+                        <div class="flex-1">
+                            <label
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Semester</label>
+                            <select name="semester"
+                                class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2 px-3 text-sm font-bold focus:ring-2 focus:ring-brand outline-none">
+                                <option value="S1">Semester 1</option>
+                                <option value="S2">Semester 2</option>
+                                <option value="S3">Semester 3</option>
+                                <option value="S4">Semester 4</option>
+                                <option value="S5">Semester 5</option>
+                                <option value="S6">Semester 6</option>
+                                <option value="S7">Semester 7</option>
+                                <option value="S8">Semester 8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Experiment
+                            Title / Topic</label>
+                        <input type="text" name="title" required placeholder="e.g., Binary Search Tree Implementation"
+                            class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2 px-3 text-sm focus:ring-2 focus:ring-brand outline-none">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Code</label>
+                        <textarea name="code" required placeholder="Paste your tested code here..."
+                            class="w-full h-40 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2 px-3 text-sm code-font focus:ring-2 focus:ring-brand outline-none resize-none"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="mt-2 w-full bg-brand text-white font-black py-3 rounded-xl hover:opacity-90 transition shadow-lg shadow-brand/30 flex items-center justify-center gap-2">SUBMIT
+                        FOR REVIEW</button>
+                </form>
+            </div>
+
+            <div id="contributeSuccessArea" class="hidden flex-col items-center justify-center p-12 text-center">
+                <div class="w-16 h-16 bg-emerald-500/20 text-brand rounded-full flex items-center justify-center mb-4">
+                    <i data-lucide="check-circle" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-2">Code Submitted!</h3>
+                <p class="text-slate-500 text-sm mb-6">Thanks for helping your juniors out. Your code will be reviewed
+                    and added to the dashboard shortly.</p>
+                <button onclick="closeContributeModal()"
+                    class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-2 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+        let labs = [];
+
+        const departmentsData = [
+            { id: 'CS', title: 'Computer Science', desc: 'CS • Data Structures, Networks & More', emoji: '💻', gradient: 'from-blue-600/35 to-indigo-800/35', hover: 'hover:from-blue-600/45 hover:to-indigo-800/45', colors: '#60a5fa,#3b82f6,#2563eb,#1d4ed8,#ffffff', textColor: 'text-blue-200', status: 'active' },
+            { id: 'IT', title: 'Information Tech', desc: 'IT • Web, Systems & Software', emoji: '🌐', gradient: 'from-sky-500/35 to-cyan-700/35', hover: 'hover:from-sky-500/45 hover:to-cyan-700/45', colors: '#0ea5e9,#06b6d4,#22d3ee,#38bdf8,#ffffff', textColor: 'text-sky-200', status: 'coming_soon' },
+            { id: 'EC', title: 'Electronics', desc: 'EC • MATLAB, Circuits & Signals', emoji: '⚡', gradient: 'from-emerald-600/35 to-teal-800/35', hover: 'hover:from-emerald-600/45 hover:to-teal-800/45', colors: '#10b981,#0d9488,#14b8a6,#34d399,#ffffff', textColor: 'text-emerald-200', status: 'active' },
+            { id: 'ME', title: 'Mechanical', desc: 'ME • CAD, Thermodynamics & Design', emoji: '⚙️', gradient: 'from-orange-600/35 to-amber-800/35', hover: 'hover:from-orange-600/45 hover:to-amber-800/45', colors: '#ea580c,#d97706,#f59e0b,#f97316,#ffffff', textColor: 'text-orange-200', status: 'coming_soon' },
+            { id: 'CE', title: 'Civil', desc: 'CE • Structures, Materials & Survey', emoji: '🏗️', gradient: 'from-stone-600/35 to-slate-800/35', hover: 'hover:from-stone-600/45 hover:to-slate-800/45', colors: '#78716c,#475569,#64748b,#a8a29e,#ffffff', textColor: 'text-stone-300', status: 'coming_soon' },
+            { id: 'EEE', title: 'Electrical (EEE)', desc: 'EEE • Power, Machines & Control', emoji: '🔌', gradient: 'from-yellow-500/35 to-orange-700/35', hover: 'hover:from-yellow-500/45 hover:to-orange-700/45', colors: '#eab308,#ea580c,#f59e0b,#f97316,#ffffff', textColor: 'text-yellow-200', status: 'coming_soon' },
+            { id: 'AI', title: 'Artificial Intelligence (AI)', desc: 'AI • Machine Learning, Neural Nets', emoji: '🧠', gradient: 'from-fuchsia-600/35 to-pink-800/35', hover: 'hover:from-fuchsia-600/45 hover:to-pink-800/45', colors: '#e879f9,#d946ef,#c026d3,#a21caf,#ffffff', textColor: 'text-fuchsia-200', status: 'coming_soon' }
+        ];
+
+        function renderHomeDepartments() {
+            const grid = document.getElementById('homeDeptGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            const sortedDepts = [...departmentsData].sort((a, b) => {
+                if (a.status === 'active' && b.status === 'coming_soon') return -1;
+                if (a.status === 'coming_soon' && b.status === 'active') return 1;
+                return 0;
+            });
+            
+            sortedDepts.forEach(dept => {
+                const isActive = dept.status === 'active';
+                const containerClass = isActive 
+                    ? `cbtn relative overflow-hidden group flex flex-col items-start justify-between p-8 rounded-3xl bg-gradient-to-br ${dept.gradient} backdrop-blur-md border border-white/10 text-white shadow-xl hover:shadow-2xl ${dept.hover} hover:scale-[1.02] transition-all`
+                    : `cbtn relative overflow-hidden group flex flex-col items-start justify-between p-8 rounded-3xl bg-gradient-to-br ${dept.gradient} backdrop-blur-md border border-white/10 text-white shadow-md opacity-70 hover:opacity-100 hover:scale-[1.02] transition-all cursor-pointer`;
+                    
+                const clickHandler = isActive ? '' : `onclick="openContributeModal()"`;
+                
+                const effectsHtml = `
+                    <div class="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all duration-500 pointer-events-none"></div>
+                    <div class="card-holo"></div>
+                    <div class="card-shine"></div>
+                `;
+
+                const badgeHtml = !isActive ? `
+                    <div class="absolute top-4 right-4 bg-brand/90 hover:bg-brand text-white border border-white/20 text-[10px] uppercase font-black tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg flex items-center gap-1 transition-colors">
+                        <i data-lucide="rocket" class="w-3 h-3"></i> Contribute
+                    </div>
+                ` : '';
+
+                const actionHtml = isActive ? `
+                    <div class="w-full flex flex-col sm:flex-row gap-2 relative z-[10] mt-6 no-print">
+                        <button onclick="selectDept('${dept.id}', event)" class="flex-1 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl py-2 px-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all min-h-[36px]">
+                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Labs
+                        </button>
+                        <button onclick="openArcade('${dept.id}', false, event)" class="flex-1 bg-brand text-white rounded-xl py-2 px-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all hover:scale-105 hover:shadow-lg hover:shadow-brand/30 min-h-[36px]">
+                            <i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> Arcade
+                        </button>
+                    </div>
+                ` : `
+                    <div class="mt-6 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 relative z-[5] group-hover:text-white/90 transition-colors">
+                        <i data-lucide="upload" class="w-4 h-4"></i> Help Us Build
+                    </div>
+                `;
+                
+                const tag = isActive ? 'div' : 'button';
+                
+                grid.innerHTML += `
+                    <${tag} ${clickHandler} class="${containerClass}" data-colors="${dept.colors}">
+                        ${effectsHtml}
+                        ${badgeHtml}
+                        <div class="text-5xl mb-4 relative z-[5]">${dept.emoji}</div>
+                        <div class="relative z-[5] text-left">
+                            <div class="text-xs font-black uppercase tracking-[0.2em] ${dept.textColor} mb-1">Branch</div>
+                            <h3 class="text-2xl font-black">${dept.title}</h3>
+                            <p class="${dept.textColor} text-sm mt-1 font-medium">${dept.desc}</p>
+                        </div>
+                        ${actionHtml}
+                    </${tag}>
+                `;
+            });
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        }
+
+        // --- LANGUAGE CONFIG: maps lang column values to display labels & icons ---
+        const langConfig = {
+            "language-c": { label: "C", icon: "💻" },
+            "language-cpp": { label: "C++", icon: "💻" },
+            "language-matlab": { label: "MATLAB", icon: "📊" },
+            "language-python": { label: "Python", icon: "🐍" },
+            "language-java": { label: "Java", icon: "☕" },
+            "language-js": { label: "JS", icon: "⚡" },
+        };
+
+        // --- BRANCH SWITCHING ---
+        // Depts that use semester-based filtering (CS and IT have per-sem experiments)
+        const semBoundDepts = ['CS', 'IT'];
+
+        function filterLabs(branchName) {
+            // Diagnostic: confirm exactly what string is being searched
+            console.log("Filtering for dept:", branchName);
+            console.log("Current labs in memory:", labs.length);
+            if (labs.length > 0) {
+                const uniqueDepts = [...new Set(labs.map(d => d.dept).filter(Boolean))];
+                console.log("Available departments in sheet:", uniqueDepts);
+                const uniqueSems = [...new Set(labs.map(d => d.sem).filter(Boolean))];
+                console.log("Available semesters in sheet:", uniqueSems);
+            }
+
+            // Sync the dropdown if called programmatically
+            const sel = document.getElementById('deptSelect');
+            if (sel && sel.value !== branchName) sel.value = branchName;
+
+            // Sync the flashcard arcade if defined
+            if (typeof startArcade === 'function') {
+                startArcade(branchName);
+            }
+
+            // Show brief loading indicator in grid
+            const grid = document.getElementById('experimentGrid');
+            if (grid) {
+                grid.innerHTML = `
+                    <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                        <div class="w-12 h-12 border-4 border-brand border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p class="text-slate-400 font-bold text-sm">Loading ${branchName} experiments...</p>
+                    </div>`;
+            }
+
+            // Short timeout so the spinner can paint before the render blocks the thread
+            setTimeout(() => renderLabs(), 50);
+        }
+
+        async function fetchLabsData() {
+            const loader = document.getElementById('loader-container');
+            if (loader) loader.classList.remove('hidden');
+            try {
+                const baseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTapB170ZXj4vm6WcRGvmRyAYaA3tbKREgDO1lazPVE6WxRyf3chi3x4C4YeoGNeGXchwLmByJp71po/pub?output=csv";
+                const noCacheUrl = baseUrl + "&t=" + new Date().getTime();
+
+                Papa.parse(noCacheUrl, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
+                        labs = results.data
+                            .filter(row => Object.values(row).some(val => val !== null && val !== undefined && val.toString().trim() !== ''))
+                            .map(row => ({
+                                ...row,
+                                id: parseInt(row.id, 10)
+                            }));
+                        console.log("Fetched Labs:", labs);
+                        if (loader) loader.classList.add('hidden');
+                        renderLabs();
+                    },
+                    error: function (err) {
+                        console.error("PapaParse error:", err);
+                        if (loader) loader.classList.add('hidden');
+                    }
+                });
+            } catch (err) {
+                console.error("Error initiating PapaParse:", err);
+            }
+        }
+
+        const programmerJokes = [
+            "Why do programmers prefer dark mode? Because light attracts bugs.",
+            "There are 10 types of people: those who understand binary, and those who don't.",
+            "I'd tell you a UDP joke, but you might not get it.",
+            "A SQL query goes into a bar, walks up to two tables and asks... 'Can I join you?'",
+            "Hardware: The part of a computer you can kick. Software: The part you can only curse at."
+        ];
+
+        let activeSem = 'S6', allVisible = true, favorites = JSON.parse(localStorage.getItem('ktu_favorites')) || [], viewFavoritesMode = false, isMatrixMode = false, preMatrixColor = '#22c55e';
+
+        document.getElementById('jokeText').innerText = programmerJokes[Math.floor(Math.random() * programmerJokes.length)];
+
+        // --- EASTER EGGS ---
+
+        let logoClicks = 0, clickTimer;
+        function triggerGodMode() {
+            logoClicks++; clearTimeout(clickTimer);
+            if (logoClicks >= 7) {
+                document.body.classList.toggle('god-mode');
+                if (document.body.classList.contains('god-mode')) {
+                    confetti({ particleCount: 500, spread: 160, origin: { y: 0.5 } });
+                    document.getElementById('pageTitle').innerText = "GOD MODE UNLOCKED 👑";
+                } else { document.getElementById('pageTitle').innerText = `Semester ${activeSem.replace('S', '')} Labs`; }
+                logoClicks = 0;
+            } else { clickTimer = setTimeout(() => { logoClicks = 0; }, 1000); }
+        }
+
+        let secretBuffer = '';
+        document.addEventListener('keydown', (e) => {
+            secretBuffer += e.key.toLowerCase();
+            if (secretBuffer.includes('spin')) {
+                document.body.style.transform = 'rotate(360deg)';
+                setTimeout(() => { document.body.style.transition = 'none'; document.body.style.transform = 'rotate(0deg)'; setTimeout(() => { document.body.style.transition = 'transform 1.5s ease-in-out, background-color 0.3s ease, color 0.3s ease'; }, 50); }, 1500);
+                secretBuffer = '';
+            }
+            if (secretBuffer.length > 20) secretBuffer = secretBuffer.slice(-20);
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('searchInput').focus(); }
+            if (e.key === 'Escape') {
+                if (!document.getElementById('practiceOverlay').classList.contains('hidden')) closePractice();
+                else { document.getElementById('searchInput').value = ''; document.getElementById('searchInput').blur(); renderLabs(); }
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const badWords = ['hack', 'cheat', 'answers', 'admin'];
+            const searchInput = document.getElementById('searchInput');
+            if (badWords.some(word => val.includes(word))) {
+                searchInput.classList.add('shake-active'); searchInput.value = "NICE TRY. IP LOGGED. 🚔";
+                setTimeout(() => { searchInput.classList.remove('shake-active'); searchInput.value = ""; renderLabs(""); }, 2000);
+            } else { renderLabs(val); }
+        });
+
+        // --- MATRIX MODE & TRAILS ---
+        let matrixInterval;
+        function toggleMatrixMode() {
+            isMatrixMode = !isMatrixMode; document.body.classList.toggle('matrix-active', isMatrixMode);
+            const mCanvas = document.getElementById('matrixCanvas'), tCanvas = document.getElementById('trailCanvas');
+            if (isMatrixMode) {
+                document.documentElement.classList.add('dark'); document.documentElement.style.setProperty('--brand', '#00FF41');
+                mCanvas.classList.remove('hidden'); tCanvas.classList.remove('hidden'); startMatrixRain(mCanvas);
+            } else {
+                document.documentElement.style.setProperty('--brand', preMatrixColor);
+                mCanvas.classList.add('hidden'); tCanvas.classList.add('hidden'); clearInterval(matrixInterval);
+            }
+        }
+        function startMatrixRain(canvas) {
+            const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"\'#&_(),.;:?!\\|{}<>[]^~'.split('');
+            const fontSize = 14; const columns = canvas.width / fontSize; const drops = Array.from({ length: columns }).fill(1);
+            if (matrixInterval) clearInterval(matrixInterval);
+            matrixInterval = setInterval(() => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    ctx.fillText(letters[Math.floor(Math.random() * letters.length)], i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0; drops[i]++;
+                }
+            }, 33);
+        }
+        const trailCtx = document.getElementById('trailCanvas').getContext('2d'); let trailParticles = [];
+        window.addEventListener('resize', () => { document.getElementById('trailCanvas').width = window.innerWidth; document.getElementById('trailCanvas').height = window.innerHeight; });
+        document.getElementById('trailCanvas').width = window.innerWidth; document.getElementById('trailCanvas').height = window.innerHeight;
+        window.addEventListener('mousemove', (e) => { if (!isMatrixMode) return; trailParticles.push({ x: e.clientX, y: e.clientY, life: 1, size: Math.random() * 3 + 2 }); });
+        function animateTrails() {
+            requestAnimationFrame(animateTrails); if (!isMatrixMode) return;
+            trailCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            for (let i = 0; i < trailParticles.length; i++) {
+                let p = trailParticles[i]; trailCtx.fillStyle = `rgba(0, 255, 65, ${p.life})`; trailCtx.beginPath(); trailCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2); trailCtx.fill();
+                p.life -= 0.02; if (p.life <= 0) { trailParticles.splice(i, 1); i--; }
+            }
+        }
+        animateTrails();
+
+        // --- SMART PRINT MODE ---
+        function showToast(message, tip) {
+            const existing = document.getElementById('toastNotif');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'toastNotif';
+            toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:9998;max-width:360px;width:calc(100% - 2rem);';
+            toast.innerHTML = `
+                <div class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl shadow-2xl p-4 flex items-start gap-3 border border-white/10 dark:border-slate-200">
+                    <span class="text-2xl mt-0.5">⭐</span>
+                    <div>
+                        <p class="font-black text-sm leading-snug">${message}</p>
+                        ${tip ? `<p class="text-xs mt-1 opacity-70 font-medium">${tip}</p>` : ''}
+                    </div>
+                    <button onclick="document.getElementById('toastNotif').remove()" class="ml-auto text-white/50 dark:text-slate-400 hover:text-white dark:hover:text-slate-900 flex-shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 4500);
+        }
+
+        function printCheatSheet() {
+            if (favorites.length === 0) {
+                showToast(
+                    "Your Favorites list is empty! Add some experiments first, then come back here to print your custom cheat sheet.",
+                    "💡 Tip: Click the ⭐ star icon on any experiment to save it."
+                );
+                return;
+            }
+            viewFavoritesMode = true; document.getElementById('pageTitle').innerText = "Saved Favorites"; document.getElementById('pageSubtitle').innerText = "Your printable cheat sheet";
+            const favBtn = document.getElementById('favToggleBtn'); favBtn.classList.remove('bg-yellow-500/10', 'text-yellow-600', 'dark:text-yellow-500'); favBtn.classList.add('bg-yellow-500', 'text-white');
+            allVisible = true; document.getElementById('masterPreviewBtn').classList.replace('text-slate-500', 'text-brand'); document.getElementById('masterToggleText').innerText = "Preview: ON";
+            renderLabs(''); setTimeout(() => { window.print(); }, 500);
+        }
+
+        // --- COLLAPSIBLE & DRAGGABLE WIDGET LOGIC ---
+        function toggleStudyHub() {
+            const body = document.getElementById('studyHubBody');
+            const miniTimer = document.getElementById('miniTimerDisplay');
+            const icon = document.getElementById('studyHubToggleIcon');
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                miniTimer.classList.add('hidden');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'chevron-up');
+                    lucide.createIcons();
+                }
+            } else {
+                body.classList.add('hidden');
+                miniTimer.classList.remove('hidden');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'chevron-down');
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        const dragItem = document.getElementById("studyHubWidget"), dragHandle = document.getElementById("studyHubDragHandle");
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; dragHandle.onmousedown = dragMouseDown;
+        function dragMouseDown(e) { e = e || window.event; e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; document.onmouseup = closeDragElement; document.onmousemove = elementDrag; }
+        function elementDrag(e) { e = e || window.event; e.preventDefault(); pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY; pos3 = e.clientX; pos4 = e.clientY; dragItem.style.top = (dragItem.offsetTop - pos2) + "px"; dragItem.style.left = (dragItem.offsetLeft - pos1) + "px"; dragItem.style.right = "auto"; }
+        function closeDragElement() { document.onmouseup = null; document.onmousemove = null; }
+
+        // --- POMODORO TIMER ---
+        let studyTime = 25 * 60, breakTime = 5 * 60, timerInterval, isStudying = true, isTimerRunning = false;
+        function updateTimerDisplay(seconds, elementId) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById(elementId).innerText = `${m}:${s}`;
+            if (elementId === 'timerDisplay') {
+                document.getElementById('miniTimerDisplay').innerText = `${m}:${s}`;
+            }
+        }
+        function startTimer() {
+            if (isTimerRunning) { clearInterval(timerInterval); document.getElementById('startTimerBtn').innerHTML = '<i data-lucide="play" class="w-4 h-4 inline"></i> RESUME'; lucide.createIcons(); isTimerRunning = false; return; }
+            isTimerRunning = true; document.getElementById('startTimerBtn').innerHTML = '<i data-lucide="pause" class="w-4 h-4 inline"></i> PAUSE'; lucide.createIcons();
+            timerInterval = setInterval(() => {
+                if (isStudying) { studyTime--; updateTimerDisplay(studyTime, 'timerDisplay'); if (studyTime <= 0) { clearInterval(timerInterval); triggerBreak(); } }
+                else { breakTime--; updateTimerDisplay(breakTime, 'breakTimerDisplay'); if (breakTime <= 0) { clearInterval(timerInterval); skipBreak(); } }
+            }, 1000);
+        }
+        function resetTimer() { clearInterval(timerInterval); isTimerRunning = false; isStudying = true; studyTime = 25 * 60; breakTime = 5 * 60; updateTimerDisplay(studyTime, 'timerDisplay'); document.getElementById('timerLabel').innerText = "Focus Session"; document.getElementById('startTimerBtn').innerHTML = '<i data-lucide="play" class="w-4 h-4 inline"></i> START'; lucide.createIcons(); }
+        function triggerBreak() {
+            isStudying = false;
+            isTimerRunning = false; // FIX: Reset toggle so startTimer() actually starts
+            document.getElementById('timerLabel').innerText = "Break Time!";
+            document.getElementById('timerDisplay').innerText = "00:00";
+            if (document.getElementById('miniTimerDisplay')) {
+                document.getElementById('miniTimerDisplay').innerText = "BREAK";
+            }
+            if (document.getElementById('miniTimerText')) {
+                document.getElementById('miniTimerText').innerText = "BREAK";
+            }
+            document.getElementById('gameOverlay').classList.remove('hidden');
+            resetGame();
+            startTimer(); // This will now correctly start the 5-minute countdown
+        }
+        function skipStudy() { if (!isStudying) return; clearInterval(timerInterval); triggerBreak(); }
+        function skipBreak() { if (isStudying) return; document.getElementById('gameOverlay').classList.add('hidden'); resetTimer(); }
+
+        // --- STUDY VIBES AUDIO ---
+        let currentAudio = null;
+        function toggleAudio(type) {
+            const btnRain = document.getElementById('rainBtn'), btnBrown = document.getElementById('brownBtn'); const audioRain = document.getElementById('audio-rain'), audioBrown = document.getElementById('audio-brown');
+            if (currentAudio === type) { if (type === 'rain') { audioRain.pause(); btnRain.classList.remove('text-brand', 'bg-brand/10'); } if (type === 'brown') { audioBrown.pause(); btnBrown.classList.remove('text-brand', 'bg-brand/10'); } currentAudio = null; }
+            else { audioRain.pause(); audioBrown.pause(); btnRain.classList.remove('text-brand', 'bg-brand/10'); btnBrown.classList.remove('text-brand', 'bg-brand/10'); if (type === 'rain') { audioRain.play(); btnRain.classList.add('text-brand', 'bg-brand/10'); } if (type === 'brown') { audioBrown.play(); btnBrown.classList.add('text-brand', 'bg-brand/10'); } currentAudio = type; }
+        }
+
+        // --- HOME STUDIO IDE LOGIC ---
+        let currentPracticeOriginalCode = "";
+
+        function buildAlgoList(algoText) {
+            const algoList = document.getElementById('algoList');
+            const algoNote = document.getElementById('algoNote');
+            algoList.innerHTML = '';
+            algoNote.innerText = '';
+
+            if (!algoText || algoText.trim() === '') {
+                algoList.innerHTML = '<li class="text-slate-500 italic">No algorithm provided for this experiment.</li>';
+                return;
+            }
+
+            // Split on period followed by space or digit to get clean steps
+            const steps = algoText
+                .split(/\.\s+|(?=\d+\.\s)/)
+                .map(s => s.replace(/^\d+\.\s*/, '').trim())
+                .filter(s => s.length > 2);
+
+            if (steps.length === 0) {
+                // Fallback: show raw text as single paragraph
+                algoList.innerHTML = `<li class="list-none -ml-5 whitespace-pre-wrap break-words">${escapeHTML(algoText)}</li>`;
+            } else {
+                steps.forEach(step => {
+                    const li = document.createElement('li');
+                    li.className = 'break-words';
+                    li.textContent = step;
+                    algoList.appendChild(li);
+                });
+            }
+            algoNote.innerText = 'Generated from experiment algorithm field.';
+        }
+
+        function openPracticeMode(encodedCode, langClass, algoText) {
+            const isMATLAB = langClass === 'language-matlab';
+
+            // --- Populate Algorithm tab with parsed steps ---
+            buildAlgoList(algoText || '');
+
+            // --- Populate Reference / Code tab ---
+            const refElement = document.getElementById('practiceReference');
+
+            if (isMATLAB) {
+                // MATLAB: no runnable code — show a clear placeholder
+                refElement.className = 'code-font text-sm text-slate-400 italic';
+                refElement.textContent = '// MATLAB script: Run in your local MATLAB software.\n// Refer to the Algorithm tab for the step-by-step procedure.';
+                document.getElementById('practiceInput').value = '';
+                document.getElementById('practiceInput').placeholder = '// MATLAB script. Use the Algorithm tab above for the procedure.';
+                document.getElementById('terminalOutput').innerHTML = '<span class="text-yellow-400">📊 MATLAB</span> — execute this script in your local MATLAB environment.';
+
+                document.getElementById('practiceOverlay').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                // Auto-switch to Algorithm tab for MATLAB
+                switchStudioTab('algo');
+                return;
+            }
+
+            // --- C / other languages: normal flow ---
+            let rawCode = atob(encodedCode);
+
+            rawCode = rawCode.replace(/\/\/===FILE:\s*([a-zA-Z0-9_.-]+)/g, '\n\n/* ==========================================\n   FILE: $1\n========================================== */\n\n');
+            rawCode = rawCode.replace(/>(#include)/g, '>\n$1');
+            rawCode = rawCode.replace(/"(#include)/g, '"\n$1');
+            rawCode = rawCode.replace(/\*\/(#include)/g, '*/\n$1');
+
+            currentPracticeOriginalCode = rawCode;
+
+            refElement.className = `${langClass} code-font text-sm`;
+            refElement.textContent = rawCode;
+
+            document.getElementById('practiceInput').value = '';
+            document.getElementById('practiceInput').placeholder = '// Start writing your code here...';
+            document.getElementById('terminalOutput').innerHTML = '<span class="text-brand">student@ktulabs:~$</span> ready for execution...';
+            document.getElementById('practiceOverlay').classList.remove('hidden');
+
+            if (window.Prism) Prism.highlightElement(refElement);
+            document.body.style.overflow = 'hidden';
+            switchStudioTab('code');
+        }
+
+        function closePractice() {
+            document.getElementById('practiceOverlay').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchStudioTab(tab) {
+            document.getElementById('pane-code').classList.add('hidden');
+            document.getElementById('pane-algo').classList.add('hidden');
+            document.getElementById('pane-notes').classList.add('hidden');
+            document.getElementById('tab-code').classList.remove('tab-active', 'text-white');
+            document.getElementById('tab-algo').classList.remove('tab-active', 'text-white');
+            document.getElementById('tab-notes').classList.remove('tab-active', 'text-white');
+
+            document.getElementById(`pane-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-white');
+        }
+
+        async function runFakeTerminal() {
+            let userCode = "";
+            try {
+                userCode = editor.getValue();
+            } catch (e) {
+                userCode = document.getElementById('practiceInput').value;
+            }
+
+            const terminal = document.getElementById('terminalOutput');
+            terminal.innerHTML = '<span class="text-brand">student@ktulabs:~$</span> Compiling and running...<br/>';
+
+            try {
+                const response = await fetch('https://emacs.piston.rs/api/v2/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        language: "c",
+                        version: "10.2.0",
+                        files: [
+                            { content: userCode }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.run && data.run.output) {
+                    terminal.innerHTML += `<pre class="text-slate-300 mt-2 whitespace-pre-wrap font-mono">${escapeHTML(data.run.output)}</pre>`;
+                    terminal.innerHTML += '<br/><span class="text-brand">student@ktulabs:~$</span> ';
+                } else {
+                    terminal.innerHTML += '<br/><span class="text-red-500">Error: Could not retrieve output.</span><br/><span class="text-brand">student@ktulabs:~$</span> ';
+                }
+            } catch (error) {
+                terminal.innerHTML = 'student@ktulabs:~$ Error connecting to execution server. Please try again later.';
+            }
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // --- SNAKE GAME ---
+        const canvas = document.getElementById('gameCanvas'); const ctx = canvas.getContext('2d'); const box = 20; let snake = [], food, d, score, gameLoop;
+        document.addEventListener('keydown', (e) => { if (!document.getElementById('gameOverlay').classList.contains('hidden')) { if (e.keyCode == 37 && d != "RIGHT") d = "LEFT"; else if (e.keyCode == 38 && d != "DOWN") d = "UP"; else if (e.keyCode == 39 && d != "LEFT") d = "RIGHT"; else if (e.keyCode == 40 && d != "UP") d = "DOWN"; } });
+        function resetGame() { clearInterval(gameLoop); snake = []; snake[0] = { x: 9 * box, y: 10 * box }; food = { x: Math.floor(Math.random() * 19 + 1) * box, y: Math.floor(Math.random() * 19 + 1) * box }; score = 0; d = null; document.getElementById('gameScore').innerText = score; document.getElementById('gameOverScreen').classList.replace('flex', 'hidden'); gameLoop = setInterval(drawGame, 100); }
+        function drawGame() {
+            ctx.fillStyle = "black"; ctx.fillRect(0, 0, 400, 400);
+            for (let i = 0; i < snake.length; i++) { ctx.fillStyle = (i == 0) ? "#22c55e" : "#16a34a"; ctx.fillRect(snake[i].x, snake[i].y, box, box); ctx.strokeStyle = "black"; ctx.strokeRect(snake[i].x, snake[i].y, box, box); }
+            ctx.fillStyle = "red"; ctx.fillRect(food.x, food.y, box, box);
+            let snakeX = snake[0].x, snakeY = snake[0].y; if (d == "LEFT") snakeX -= box; if (d == "UP") snakeY -= box; if (d == "RIGHT") snakeX += box; if (d == "DOWN") snakeY += box;
+            if (snakeX == food.x && snakeY == food.y) { score++; document.getElementById('gameScore').innerText = score; food = { x: Math.floor(Math.random() * 19 + 1) * box, y: Math.floor(Math.random() * 19 + 1) * box }; } else { snake.pop(); }
+            let newHead = { x: snakeX, y: snakeY };
+            if (snakeX < 0 || snakeX >= 400 || snakeY < 0 || snakeY >= 400 || collision(newHead, snake)) { clearInterval(gameLoop); document.getElementById('gameOverScreen').classList.replace('hidden', 'flex'); }
+            snake.unshift(newHead);
+        }
+        function collision(head, array) { for (let i = 0; i < array.length; i++) { if (head.x == array[i].x && head.y == array[i].y) return true; } return false; }
+
+        // --- CORE UI ---
+        function escapeHTML(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function toggleCodeHeight(id) {
+            const wrap = document.getElementById(`codeWrap-${id}`);
+            const fade = document.getElementById(`fade-${id}`);
+            const text = document.getElementById(`expandText-${id}`);
+            const icon = document.getElementById(`expandIcon-${id}`);
+
+            if (wrap.classList.contains('max-h-64')) {
+                wrap.classList.remove('max-h-64');
+                wrap.classList.add('max-h-[2000px]');
+                if (fade) fade.style.opacity = '0';
+                text.innerText = 'Show Less';
+                icon.setAttribute('data-lucide', 'chevron-up');
+            } else {
+                wrap.classList.add('max-h-64');
+                wrap.classList.remove('max-h-[2000px]');
+                if (fade) fade.style.opacity = '1';
+                text.innerText = 'Show Full Code';
+                icon.setAttribute('data-lucide', 'chevron-down');
+            }
+            lucide.createIcons();
+        }
+
+        function renderLabs(filter = '') {
+            const grid = document.getElementById('experimentGrid');
+            const selectedDept = document.getElementById('deptSelect').value;
+            grid.innerHTML = '';
+
+            // For depts like EC, ME, CE, EEE – skip the semester filter so ALL their
+            // experiments show up regardless of which sem they were entered under.
+            const useSemFilter = semBoundDepts.includes(selectedDept);
+
+            const filtered = labs.filter(l => {
+                if (!l || typeof l.title !== 'string') return false;
+                const matchesSearch = l.title.toLowerCase().includes(filter.toLowerCase());
+                const matchesDept = l.dept && l.dept.trim() === selectedDept;
+                const matchesSem = !useSemFilter || l.sem === activeSem;
+                return viewFavoritesMode
+                    ? (favorites.includes(l.id) && matchesSearch)
+                    : (matchesDept && matchesSem && matchesSearch);
+            });
+            console.log(`renderLabs → dept=${selectedDept}, sem=${activeSem}, useSemFilter=${useSemFilter}, matched=${filtered.length}`);
+            if (filtered.length === 0 && labs.length > 0) {
+                console.warn("No matches! Unique dept values in data:", [...new Set(labs.map(l => l.dept))]);
+            }
+            filtered.sort((a, b) => {
+                const aHasCode = a.code && typeof a.code === 'string' && a.code.trim() !== '';
+                const bHasCode = b.code && typeof b.code === 'string' && b.code.trim() !== '';
+
+                if (aHasCode && !bHasCode) return -1;
+                if (!aHasCode && bHasCode) return 1;
+
+                return (a.id || 0) - (b.id || 0);
+            });
+            console.log("Filtered for rendering:", filtered);
+            if (filtered.length === 0) {
+                // Only show empty state after data has been fetched (labs array populated)
+                if (labs.length === 0) {
+                    grid.innerHTML = '';
+                    return;
+                }
+                grid.innerHTML = `
+                <div class="col-span-full flex flex-col items-center justify-center py-32 text-center bg-white dark:bg-slate-900 rounded-[2rem] border border-dashed border-slate-300 dark:border-white/10 shadow-sm transition-all duration-300">
+                    <div class="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center mb-6 shadow-inner ring-4 ring-brand/5">
+                        <i data-lucide="folder-search" class="w-10 h-10 animate-pulse"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 matrix-text">Coming Soon: Work in Progress</h3>
+                    <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8 font-medium matrix-text">We haven't added these experiments yet. If you have the code, help your juniors out by contributing!</p>
+                    <button onclick="typeof openContributeModal === 'function' ? openContributeModal() : alert('Contribute modal coming soon!')" class="bg-brand text-white px-8 py-3.5 min-h-[44px] rounded-xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-transform shadow-lg shadow-brand/30 flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Add Missing Code</button>
+                </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            const maxRender = 100;
+            if (filtered.length > maxRender) {
+                console.warn(`Limiting render to ${maxRender} items to prevent browser lag. Total: ${filtered.length}`);
+            }
+
+            filtered.slice(0, maxRender).forEach(lab => {
+                const isFav = favorites.includes(lab.id);
+                const card = document.createElement('div');
+                card.id = `card-${lab.id}`;
+                card.className = "lab-card bg-white dark:bg-slate-900 rounded-[2rem] p-2 border border-slate-200 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all duration-300 relative";
+                const codeText = lab.code ? lab.code.toString() : '';
+                const codeMissing = codeText.trim().length === 0;
+                const encoded = btoa(codeText);
+                const safeCode = escapeHTML(codeText);
+                const langMeta = langConfig[lab.lang] || { label: lab.lang ? lab.lang.replace('language-', '').toUpperCase() : 'TEXT', icon: '📄' };
+                const langBadge = `${langMeta.icon} ${langMeta.label}`;
+                const langBadgeTitle = langMeta.label;
+                const isLong = codeText.split('\n').length > 12;
+
+                // Determine if this is a documentation-only (MATLAB / no-code) experiment
+                const isMATLABDoc = lab.lang === 'language-matlab' && codeMissing;
+                const algoText = (lab.algo || lab.desc || '').trim();
+                const encodedAlgo = encodeURIComponent(algoText);
+
+                const topCopyButtonHtml = codeMissing ? '' : `<button onclick="handleCopy('${lab.id}', '${encoded}')" class="copy-btn no-print min-h-[44px] bg-brand text-white font-black px-6 py-3 rounded-2xl flex items-center gap-2 hover:scale-105 active:scale-90 transition-all shadow-lg shadow-brand/30"><i data-lucide="copy" class="w-4 h-4"></i> <span class="hidden sm:inline">COPY</span></button>`;
+
+                // Badge: MATLAB doc-only gets a special elegant badge, others get "Missing Code"
+                const missingBadgeHtml = isMATLABDoc
+                    ? '<span class="inline-flex items-center gap-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest mb-3 border border-indigo-200 dark:border-indigo-900/50">📊 Documentation Only — See Algorithm Tab</span>'
+                    : (codeMissing ? '<span class="inline-block bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest mb-3 border border-red-200 dark:border-red-900/50">Missing Code</span>' : '');
+
+                // Action buttons: MATLAB docs show "Open Algorithm" instead of nothing
+                const actionButtonsHtml = codeMissing
+                    ? (isMATLABDoc ? `
+                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mb-4 no-print">
+                            <button onclick="openPracticeMode('${encoded}', '${lab.lang}', decodeURIComponent('${encodedAlgo}'))" class="text-[10px] font-black text-brand hover:opacity-80 uppercase tracking-widest flex items-center gap-2 transition-opacity matrix-text"><i data-lucide="book-open" class="w-4 h-4"></i> View Algorithm</button>
+                        </div>` : '')
+                    : `
+                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mb-4 no-print">
+                            <button onclick="downloadCodeAsPdf('${encoded}', '${lab.title.replace(/'/g, '')}')" class="text-[10px] font-black text-slate-400 hover:text-slate-600 dark:hover:text-white uppercase tracking-widest flex items-center gap-2 transition-colors matrix-text"><i data-lucide="file-down" class="w-4 h-4"></i> Download PDF</button>
+                            <button onclick="openPracticeMode('${encoded}', '${lab.lang}', decodeURIComponent('${encodedAlgo}'))" class="text-[10px] font-black text-brand hover:opacity-80 uppercase tracking-widest flex items-center gap-2 transition-opacity matrix-text"><i data-lucide="dumbbell" class="w-4 h-4"></i> Try it yourself</button>
+                            <button onclick="openScratchpad('${encoded}')" class="text-[10px] font-black text-slate-400 hover:text-slate-600 dark:hover:text-white uppercase tracking-widest flex items-center gap-2 transition-opacity matrix-text"><i data-lucide="edit-3" class="w-4 h-4"></i> Edit</button>
+                        </div>`;
+                const previewHtml = codeMissing ? '' : `
+                        <div id="preview-${lab.id}" class="rounded-2xl overflow-hidden bg-[#1d1f21] border border-white/5 transition-all duration-300 flex flex-col ${allVisible ? '' : 'hidden'}">
+                             <div class="flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/5 no-print">
+                                 <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500/80"></div><div class="w-3 h-3 rounded-full bg-yellow-500/80"></div><div class="w-3 h-3 rounded-full bg-green-500/80"></div></div>
+                                 <span class="text-[10px] font-black tracking-widest text-slate-400 uppercase bg-black/30 px-2 py-0.5 rounded-md border border-white/10 shadow-inner">${langBadge}</span>
+                             </div>
+                             <div id="codeWrap-${lab.id}" class="relative ${isLong ? 'max-h-64' : ''} overflow-hidden transition-all duration-500 ease-in-out">
+                                 <pre class="overflow-x-auto"><code class="${lab.lang} code-font">${safeCode}</code></pre>
+                                 ${isLong ? `<div id="fade-${lab.id}" class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#1d1f21] to-transparent pointer-events-none transition-opacity duration-300"></div>` : ''}
+                             </div>
+                             ${isLong ? `<button id="expandBtn-${lab.id}" onclick="toggleCodeHeight(${lab.id})" class="w-full py-3 bg-white/5 hover:bg-white/10 text-[10px] font-black text-slate-400 hover:text-white uppercase tracking-widest transition-colors flex items-center justify-center gap-2 border-t border-white/5"><i data-lucide="chevron-down" id="expandIcon-${lab.id}" class="w-4 h-4"></i> <span id="expandText-${lab.id}">Show Full Code</span></button>` : ''}
+                        </div>`;
+                const uploadButtonHtml = codeMissing ? `<div class="mb-6"><button onclick="typeof openContributeModal === 'function' ? openContributeModal() : alert('Contribute modal coming soon!')" class="bg-amber-500/10 text-amber-600 border border-amber-500/20 hover:bg-amber-500/15 transition-all px-5 py-3 min-h-[44px] rounded-2xl font-black uppercase tracking-widest flex items-center gap-2 no-print"><i data-lucide="upload" class="w-4 h-4"></i> Upload this Code</button></div>` : '';
+
+                card.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex items-center gap-3">
+                                 <div class="bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-[10px] font-black tracking-widest text-slate-500 uppercase no-print">${lab.dept} ${lab.sem}</div>
+                                 <button onclick="toggleBookmark(${lab.id})" class="p-2 rounded-full transition-colors no-print hover:bg-slate-100 dark:hover:bg-slate-800 ${isFav ? 'text-yellow-500' : 'text-yellow-400'}"><i data-lucide="star" class="w-5 h-5 ${isFav ? 'fill-yellow-500' : ''}"></i></button>
+                            </div>
+                            ${topCopyButtonHtml}
+                        </div>
+                        <h3 class="text-2xl font-extrabold mb-2 matrix-text">${lab.title}</h3>
+                        ${missingBadgeHtml}
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 matrix-text">${lab.desc}</p>
+                        ${uploadButtonHtml}
+                        ${actionButtonsHtml}
+                        ${previewHtml}
+                    </div>`;
+                grid.appendChild(card);
+            });
+            lucide.createIcons(); if (window.Prism) Prism.highlightAll();
+        }
+
+        const savedColor = localStorage.getItem('ktu_theme'); if (savedColor) { setTheme(savedColor); preMatrixColor = savedColor; }
+        function setTheme(color) { if (!isMatrixMode) { document.documentElement.style.setProperty('--brand', color); localStorage.setItem('ktu_theme', color); preMatrixColor = color; } }
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function toggleBookmark(id) { favorites.includes(id) ? favorites = favorites.filter(favId => favId !== id) : favorites.push(id); localStorage.setItem('ktu_favorites', JSON.stringify(favorites)); renderLabs(); }
+        function toggleFavoritesMode() { viewFavoritesMode = true; document.getElementById('pageTitle').innerText = "Saved Favorites"; document.getElementById('pageSubtitle').innerText = "Your bookmarked experiments"; document.getElementById('vedikettu-view').classList.add('hidden'); document.getElementById('mainLabView').classList.remove('hidden'); initSidebar(); renderLabs(); }
+        function initSidebar() {
+            const list = document.getElementById('semList');
+            list.innerHTML = '';
+            const activeSemesters = ['S4', 'S6'];
+
+            for (const s of activeSemesters) {
+                const semNumber = s.replace('S', '');
+                const btn = document.createElement('button');
+                btn.className = `flex-shrink-0 lg:w-full flex items-center justify-center lg:justify-between px-4 py-3 lg:py-3.5 rounded-xl text-sm font-bold transition-all ${activeSem === s && !viewFavoritesMode ? 'sidebar-item-active' : 'hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500'}`;
+                btn.innerHTML = `<span>Sem ${semNumber}</span> <i data-lucide="chevron-right" class="hidden lg:block w-4 h-4 ml-2"></i>`;
+                btn.onclick = () => {
+                    activeSem = s;
+                    viewFavoritesMode = false;
+                    document.getElementById('pageTitle').innerText = `Semester ${semNumber} Labs`;
+                    document.getElementById('pageSubtitle').innerText = "Showing all approved experiments";
+                    document.getElementById('home-view').classList.add('hidden');
+                    document.getElementById('vedikettu-view').classList.add('hidden');
+                    document.getElementById('mainLabView').classList.remove('hidden');
+                    initSidebar();
+                    renderLabs();
+                };
+                list.appendChild(btn);
+            }
+            lucide.createIcons();
+        }
+
+        function handleBackButton() {
+            if (history.state) {
+                history.back();
+            } else {
+                showHomeView(true);
+            }
+        }
+
+        function showHomeView(skipHistory = false) {
+            if (!skipHistory && window.history.pushState) {
+                window.history.pushState(null, '', window.location.pathname);
+            }
+            
+            // Ensure the vedikettu pdf view is closed when navigating home
+            hideVedikettuPage(true);
+            
+            const homeView = document.getElementById('home-view');
+            homeView.classList.remove('hidden');
+            homeView.style.transition = '';
+            homeView.style.opacity = '1';
+            homeView.style.pointerEvents = 'auto';
+
+            document.getElementById('mainLabView').classList.add('hidden');
+            document.getElementById('vedikettu-view').classList.add('hidden');
+
+            // Show persistent space canvas and reset it
+            const spaceCanvas = document.getElementById('space-canvas');
+            if (spaceCanvas) {
+                spaceCanvas.classList.remove('hidden');
+                spaceCanvas.classList.remove('opacity-0');
+                spaceCanvas.style.opacity = '1';
+                initSpaceBackground();
+            }
+
+            // Clear sidebar active states
+            document.querySelectorAll('#semList button').forEach(b => {
+                b.classList.remove('sidebar-item-active');
+                b.classList.add('text-slate-500', 'hover:bg-slate-200', 'dark:hover:bg-slate-800');
+            });
+        }
+
+        const SHAPES = ['rect', 'circle', 'ribbon'];
+        const EASINGS = [
+            'cubic-bezier(.22,1,.36,1)',
+            'cubic-bezier(.4,0,.6,1)',
+            'ease-out',
+        ];
+
+        function burst(btn, e) {
+            // Trigger CSS ripple
+            btn.classList.remove('fired');
+            void btn.offsetWidth;
+            btn.classList.add('fired');
+
+            const colors = (btn.dataset.colors || "#ffffff").split(',');
+            const rect = btn.getBoundingClientRect();
+            // Drop confetti at user tap/click position, fallback to button center
+            const ox = (e && e.clientX) ? e.clientX : (rect.left + rect.width / 2);
+            const oy = (e && e.clientY) ? e.clientY : (rect.top + rect.height / 2);
+            const count = 28 + Math.floor(Math.random() * 14);
+
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'confetti';
+
+                const angle = (Math.PI * 2 / count) * i + (Math.random() - .5) * .8;
+                const dist = 70 + Math.random() * 130;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist - 60 - Math.random() * 60;
+                const tr = (Math.random() - .5) * 900 + 'deg';
+                const dur = (.6 + Math.random() * .6) + 's';
+                const ease = EASINGS[Math.floor(Math.random() * EASINGS.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+                const size = 5 + Math.random() * 8;
+
+                el.style.cssText = `
+                    left:${ox}px; top:${oy}px;
+                    width:${shape === 'ribbon' ? size * 0.4 : size}px;
+                    height:${shape === 'ribbon' ? size * 2.5 : size}px;
+                    background:${color};
+                    border-radius:${shape === 'circle' ? '50%' : shape === 'ribbon' ? '1px' : '2px'};
+                    --tx:${tx}px; --ty:${ty}px; --tr:${tr};
+                    --dur:${dur}; --ease:${ease};
+                    transform:translate(-50%,-50%);
+                `;
+
+                document.body.appendChild(el);
+                el.addEventListener('animationend', () => el.remove());
+            }
+        }
+
+        let spaceCanvas, spaceCtx;
+        let spaceStars = [];
+        let spaceSpeed = 0.5;
+        let isWarping = false;
+        let warpCallback = null;
+        let warpStartTime = 0;
+        let spaceAnimFrame;
+        let spaceW = 0, spaceH = 0;
+
+        function initSpaceBackground() {
+            spaceCanvas = document.getElementById('space-canvas');
+            if (!spaceCanvas) return;
+            spaceCtx = spaceCanvas.getContext('2d');
+
+            resizeSpaceCanvas();
+            window.removeEventListener('resize', resizeSpaceCanvas);
+            window.addEventListener('resize', resizeSpaceCanvas);
+
+            // Populate stars
+            spaceStars = [];
+            const numStars = 200;
+            const colors = [
+                'rgba(255, 255, 255, ', // White
+                'rgba(147, 197, 253, ', // Soft Blue
+                'rgba(253, 240, 157, ', // Soft Amber
+                'rgba(244, 114, 182, '  // Soft Pink
+            ];
+            for (let i = 0; i < numStars; i++) {
+                spaceStars.push({
+                    x: Math.random() * spaceW - spaceW / 2,
+                    y: Math.random() * spaceH - spaceH / 2,
+                    z: Math.random() * spaceW,
+                    pz: 0,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+
+            isWarping = false;
+            spaceSpeed = 0.4;
+
+            if (spaceAnimFrame) cancelAnimationFrame(spaceAnimFrame);
+            animateSpace();
+        }
+
+        function resizeSpaceCanvas() {
+            if (!spaceCanvas) return;
+            spaceW = spaceCanvas.width = window.innerWidth;
+            spaceH = spaceCanvas.height = window.innerHeight;
+        }
+
+        function animateSpace() {
+            // Draw background trail. Semi-transparent black produces trails during acceleration.
+            const fillAlpha = isWarping ? (spaceSpeed > 25 ? 0.15 : 0.25) : 0.4;
+            spaceCtx.fillStyle = `rgba(6, 8, 20, ${fillAlpha})`;
+            spaceCtx.fillRect(0, 0, spaceW, spaceH);
+
+            if (isWarping) {
+                const elapsed = Date.now() - warpStartTime;
+
+                // Accelerate stars to warp speed
+                if (elapsed < 100) {
+                    spaceSpeed *= 1.08;
+                } else {
+                    spaceSpeed = Math.min(spaceSpeed * 1.14, 72);
+                }
+
+                // Warp transition completes after 1000ms
+                if (elapsed >= 1000) {
+                    isWarping = false;
+                    spaceSpeed = 0.4;
+
+                    if (warpCallback) {
+                        warpCallback();
+                        warpCallback = null;
+                    }
+
+                    fadeOutSpaceCanvas();
+                    return; // Stop animation loop
+                }
+            }
+
+            // Draw starfield trails
+            const numStars = spaceStars.length;
+            for (let i = 0; i < numStars; i++) {
+                const s = spaceStars[i];
+                s.pz = s.z;
+                s.z -= spaceSpeed;
+
+                if (s.z <= 0) {
+                    s.x = Math.random() * spaceW - spaceW / 2;
+                    s.y = Math.random() * spaceH - spaceH / 2;
+                    s.z = spaceW;
+                    s.pz = s.z;
+                }
+
+                const sx = (s.x / s.z) * spaceW + spaceW / 2;
+                const sy = (s.y / s.z) * spaceH + spaceH / 2;
+                const px = (s.x / s.pz) * spaceW + spaceW / 2;
+                const py = (s.y / s.pz) * spaceH + spaceH / 2;
+
+                if (sx >= 0 && sx <= spaceW && sy >= 0 && sy <= spaceH) {
+                    spaceCtx.strokeStyle = `${s.color || 'rgba(255, 255, 255, '}${Math.min(1, (1 - s.z / spaceW) + 0.65)})`;
+                    spaceCtx.lineWidth = Math.min(3.2, (1 - s.z / spaceW) * 3.2 + 0.6);
+                    spaceCtx.beginPath();
+                    spaceCtx.moveTo(px, py);
+                    spaceCtx.lineTo(sx, sy);
+                    spaceCtx.stroke();
+                }
+            }
+
+            spaceAnimFrame = requestAnimationFrame(animateSpace);
+        }
+
+        function fadeOutSpaceCanvas() {
+            let opacity = 1;
+            function fade() {
+                opacity -= 0.08;
+                if (opacity <= 0) {
+                    spaceCanvas.classList.add('opacity-0');
+                    setTimeout(() => spaceCanvas.classList.add('hidden'), 300);
+                    if (spaceAnimFrame) cancelAnimationFrame(spaceAnimFrame);
+                } else {
+                    spaceCanvas.style.opacity = opacity;
+                    requestAnimationFrame(fade);
+                }
+            }
+            fade();
+        }
+
+        function triggerWarp(callback) {
+            isWarping = true;
+            warpStartTime = Date.now();
+            warpCallback = callback;
+        }
+
+        function selectDept(deptCode, event, skipHistory = false) {
+            const btn = event ? event.currentTarget : null;
+            if (btn) {
+                burst(btn, event);
+            }
+
+            const loadSection = () => {
+                if (!skipHistory && window.history.pushState) {
+                    window.history.pushState({ view: 'labs', dept: deptCode }, '', '?dept=' + deptCode);
+                }
+                
+                // Ensure any modals are closed when navigating to labs
+                hideVedikettuPage(true);
+                
+                const deptNames = { CS: 'Computer Science', IT: 'Information Tech', EC: 'Electronics', ME: 'Mechanical', CE: 'Civil', EEE: 'Electrical (EEE)' };
+                // Update the dept dropdown
+                const sel = document.getElementById('deptSelect');
+                if (sel) sel.value = deptCode;
+                // Hide home view, show labs
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('vedikettu-view').classList.add('hidden');
+                document.getElementById('mainLabView').classList.remove('hidden');
+                // Update page title
+                document.getElementById('pageTitle').innerText = `${deptNames[deptCode] || deptCode} Labs`;
+                document.getElementById('pageSubtitle').innerText = 'Showing all approved experiments';
+                viewFavoritesMode = false;
+                initSidebar();
+                filterLabs(deptCode);
+            };
+
+            if (btn) {
+                // Fade out the home dashboard blocks slowly
+                const homeView = document.getElementById('home-view');
+                if (homeView) {
+                    homeView.style.transition = 'opacity 0.3s ease';
+                    homeView.style.opacity = '0';
+                    homeView.style.pointerEvents = 'none';
+                }
+
+                // Accelerate existing background space starfield to warp velocity
+                setTimeout(() => {
+                    triggerWarp(loadSection);
+                }, 100);
+            } else {
+                loadSection();
+            }
+        }
+
+        function downloadCodeAsPdf(encodedCode, fileName) {
+            document.fonts.ready.then(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const code = atob(encodedCode);
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const margin = 15;
+                    const maxWidth = pageWidth - margin * 2;
+
+                    // Header bar
+                    doc.setFillColor(34, 197, 94);
+                    doc.rect(0, 0, pageWidth, 18, 'F');
+                    doc.setFontSize(11);
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('KTU LABS  —  ' + fileName, margin, 12);
+
+                    // Code body
+                    doc.setFont('courier', 'normal');
+                    doc.setFontSize(9);
+                    doc.setTextColor(30, 30, 30);
+                    const lines = doc.splitTextToSize(code, maxWidth);
+                    doc.text(lines, margin, 28);
+
+                    doc.save(fileName.replace(/[^a-z0-9]/gi, '_') + '.pdf');
+                } catch (e) {
+                    console.error('PDF generation failed:', e);
+                    alert('Could not generate PDF. Please copy the code manually.');
+                }
+            });
+        }
+
+        function showVedikettuView() {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('mainLabView').classList.add('hidden');
+            document.getElementById('vedikettu-view').classList.remove('hidden');
+            document.querySelectorAll('#semList button').forEach(b => {
+                b.classList.remove('sidebar-item-active');
+                b.classList.add('text-slate-500', 'hover:bg-slate-200', 'dark:hover:bg-slate-800');
+            });
+        }
+        function toggleAllPreviews() { allVisible = !allVisible; const btn = document.getElementById('masterPreviewBtn'), text = document.getElementById('masterToggleText'); if (allVisible) { btn.classList.replace('text-slate-500', 'text-brand'); text.innerText = "Preview: ON"; } else { btn.classList.replace('text-brand', 'text-slate-500'); text.innerText = "Preview: OFF"; } renderLabs(document.getElementById('searchInput').value); }
+        function toggleSingle(id) { document.getElementById(`preview-${id}`).classList.toggle('hidden'); }
+        function handleCopy(id, encodedCode) { const card = document.getElementById(`card-${id}`), btn = card.querySelector('.copy-btn'); navigator.clipboard.writeText(atob(encodedCode)).then(() => { card.classList.add('card-copied'); btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> <span class="hidden sm:inline">COPIED!</span>`; lucide.createIcons(); confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 }, colors: ['#22c55e', '#ffffff'] }); setTimeout(() => { card.classList.remove('card-copied'); btn.innerHTML = `<i data-lucide="copy" class="w-4 h-4"></i> <span class="hidden sm:inline">COPY</span>`; lucide.createIcons(); }, 2000); }); }
+        function openScratchpad(encodedCode) { document.getElementById('scratchpadText').value = atob(encodedCode); document.getElementById('scratchpad').classList.remove('hidden'); }
+        function closeScratchpad() { document.getElementById('scratchpad').classList.add('hidden'); }
+        function copyFromScratchpad() { navigator.clipboard.writeText(document.getElementById('scratchpadText').value).then(() => { const btn = document.getElementById('scratchpadCopyBtn'); btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> COPIED!`; btn.classList.add('bg-emerald-500'); setTimeout(() => { btn.innerHTML = `COPY EDITED CODE`; btn.classList.remove('bg-emerald-500'); closeScratchpad(); }, 1500); }); }
+
+        function openContributeModal() {
+            const deptSelect = document.querySelector('#contributeForm select[name="department"]');
+            const semSelect = document.querySelector('#contributeForm select[name="semester"]');
+            if (deptSelect) deptSelect.value = document.getElementById('deptSelect').value;
+            if (semSelect) semSelect.value = activeSem;
+
+            document.getElementById('contributeFormArea').classList.remove('hidden');
+            document.getElementById('contributeSuccessArea').classList.add('hidden');
+            document.getElementById('contributeSuccessArea').classList.remove('flex');
+
+            document.getElementById('contributeModal').classList.remove('hidden');
+            document.getElementById('contributeModal').classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeContributeModal() {
+            document.getElementById('contributeModal').classList.add('hidden');
+            document.getElementById('contributeModal').classList.remove('flex');
+        }
+
+        window.currentShareTitle = "";
+        window.currentPdfUrl = "";
+
+        function showVedikettuPage(pdfUrl, documentTitle, skipHistory = false) {
+            window.currentShareTitle = documentTitle;
+            window.currentPdfUrl = pdfUrl;
+
+            // Hide all other views
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('mainLabView').classList.add('hidden');
+            const oldVedikettu = document.getElementById('vedikettu-view');
+            if (oldVedikettu) oldVedikettu.classList.add('hidden');
+
+            // Show the full-screen PDF view
+            const pdfView = document.getElementById('pdf-fullscreen-view');
+            pdfView.classList.remove('hidden');
+
+            // Update title
+            document.getElementById('pdf-view-title').innerText = '📄 ' + documentTitle;
+
+            // Set download link
+            document.getElementById('pdf-view-download-btn').href = pdfUrl;
+
+            // --- Loading state reset ---
+            const overlay = document.getElementById('pdf-loading-overlay');
+            const fallback = document.getElementById('pdf-fallback-message');
+            const loadingText = document.getElementById('pdf-loading-text');
+            overlay.classList.remove('hidden');
+            fallback.classList.add('hidden');
+            loadingText.textContent = 'Loading PDF...';
+
+            // Set iframe src via Google Viewer
+            const absoluteUrl = 'https://ktulab.pages.dev/' + pdfUrl;
+            const frame = document.getElementById('pdf-view-frame');
+            frame.src = 'https://docs.google.com/gview?url=' + absoluteUrl + '&embedded=true';
+
+            // Hide overlay when iframe fires onload
+            frame.onload = function() {
+                overlay.classList.add('hidden');
+            };
+
+            // 8-second timeout fallback — reveal hint if still loading
+            if (window._pdfLoadTimeout) clearTimeout(window._pdfLoadTimeout);
+            window._pdfLoadTimeout = setTimeout(function() {
+                if (!overlay.classList.contains('hidden')) {
+                    loadingText.textContent = 'Still loading...';
+                    fallback.classList.remove('hidden');
+                }
+            }, 8000);
+
+            if (!skipHistory) {
+                history.pushState(
+                    { view: 'vedikettu', note: pdfUrl, title: documentTitle },
+                    '',
+                    '?note=' + encodeURIComponent(pdfUrl) + '&title=' + encodeURIComponent(documentTitle)
+                );
+            }
+
+            lucide.createIcons();
+        }
+
+        function hideVedikettuPage(skipHistory = false) {
+            const pdfView = document.getElementById('pdf-fullscreen-view');
+            if (pdfView) {
+                pdfView.classList.add('hidden');
+                document.getElementById('pdf-view-frame').src = '';
+            }
+            // Return to the Vedikettu department grid, not the home screen
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('mainLabView').classList.add('hidden');
+            document.getElementById('vedikettu-view').classList.remove('hidden');
+            if (!skipHistory) {
+                window.history.pushState({ view: 'vedikettuGrid' }, '', '?section=vedikettu');
+            }
+        }
+
+        // Keep openPdfModal as alias so any other callers still work
+        function openPdfModal(pdfUrl, documentTitle) {
+            showVedikettuPage(pdfUrl, documentTitle);
+        }
+
+        function shareCurrentNotes() {
+            const currentTitle = window.currentShareTitle || 'KTU';
+            const deptPrefix = currentTitle.split(' ')[0];
+            const shareText = `${deptPrefix} Lab Exam Last-Minute Notes\nSelect your stream and grab the quick revision bits:`;
+            const shareUrl = 'https://ktulab.pages.dev/?section=vedikettu';
+            const whatsappUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(shareText + '\n\n' + shareUrl);
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function shareVedikettu() {
+            const shareUrl = 'https://ktulab.pages.dev' + window.location.pathname + window.location.search + window.location.hash;
+            const shareText = 'Bro, check out these last-minute survival notes and exam bits before the lab exam!';
+            
+            const whatsappUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(shareText + '\n\n' + shareUrl);
+            window.open(whatsappUrl, '_blank');
+        }
+
+        document.getElementById('contributeForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> SENDING...';
+            lucide.createIcons();
+
+            try {
+                const response = await fetch('https://formspree.io/f/mdajkbzn', {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('contributeFormArea').classList.add('hidden');
+                    document.getElementById('contributeSuccessArea').classList.remove('hidden');
+                    document.getElementById('contributeSuccessArea').classList.add('flex');
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.5 }, colors: ['#10b981', '#ffffff'] });
+                    form.reset();
+                } else {
+                    alert("Oops! There was a problem submitting your code.");
+                }
+            } catch (error) {
+                console.error("Contribution Error:", error);
+                alert("Oops! Something went wrong.");
+            } finally {
+                btn.innerText = originalText;
+            }
+        });
+
+        function toggleMobileSearch() {
+            const bar = document.getElementById('mobileSearchBar');
+            const isHidden = bar.classList.contains('hidden');
+            bar.classList.toggle('hidden');
+            if (isHidden) {
+                setTimeout(() => document.getElementById('searchInputMobile').focus(), 50);
+            }
+        }
+
+        function openShareModal() {
+            document.getElementById('shareModal').classList.remove('hidden');
+            document.getElementById('shareModal').classList.add('flex');
+        }
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+            document.getElementById('shareModal').classList.remove('flex');
+        }
+        function copyShareMessage() {
+            const msg = document.getElementById('shareMessageText').innerText;
+            navigator.clipboard.writeText(msg).then(() => {
+                const btn = document.getElementById('copyShareBtn');
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
+                btn.classList.add('bg-emerald-500');
+                lucide.createIcons();
+                setTimeout(() => { btn.innerHTML = original; btn.classList.remove('bg-emerald-500'); lucide.createIcons(); }, 2000);
+            });
+        }
+        function shareOnWhatsApp() {
+            const msg = document.getElementById('shareMessageText').innerText;
+            window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        }
+
+        function initHoloCards() {
+            const cards = document.querySelectorAll('#home-view .cbtn');
+            cards.forEach(card => {
+                let hue = 0;
+                card.addEventListener('mousemove', e => {
+                    const r = card.getBoundingClientRect();
+                    const x = (e.clientX - r.left) / r.width;
+                    const y = (e.clientY - r.top) / r.height;
+
+                    // 3D tilt calculations
+                    const tiltX = (y - 0.5) * -18;
+                    const tiltY = (x - 0.5) * 18;
+                    card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.03)`;
+
+                    // Set coordinates for holographic gradient & shine circle
+                    const mx = (x * 100).toFixed(1) + '%';
+                    const my = (y * 100).toFixed(1) + '%';
+                    card.style.setProperty('--mx', mx);
+                    card.style.setProperty('--my', my);
+
+                    // Cycle holographic hue based on mouse move
+                    hue = (hue + 2) % 360;
+                    card.style.setProperty('--hue', hue + 'deg');
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    // Smooth reset transform
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                    card.style.transition = 'transform .4s cubic-bezier(.34,1.56,.64,1)';
+                    setTimeout(() => {
+                        card.style.transition = 'transform .08s ease-out, box-shadow .3s';
+                    }, 400);
+                });
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('note') && urlParams.has('title')) {
+                showVedikettuPage(
+                    decodeURIComponent(urlParams.get('note')),
+                    decodeURIComponent(urlParams.get('title')),
+                    true  // skip pushState — we're already at this URL
+                );
+            } else if (urlParams.get('section') === 'vedikettu') {
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('vedikettu-view').classList.remove('hidden');
+            } else if (urlParams.has('arcade')) {
+                openArcade(urlParams.get('arcade'), true);
+            }
+            renderHomeDepartments();
+            initHoloCards();
+            initSpaceBackground();
+        });
+
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.view === 'vedikettu') {
+                showVedikettuPage(event.state.note, event.state.title, true);
+            } else if (event.state && event.state.view === 'vedikettuGrid') {
+                document.getElementById('pdf-fullscreen-view').classList.add('hidden');
+                document.getElementById('pdf-view-frame').src = '';
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('mainLabView').classList.add('hidden');
+                document.getElementById('vedikettu-view').classList.remove('hidden');
+                hideArcadePage(true);
+            } else if (event.state && event.state.view === 'labs' && event.state.dept) {
+                selectDept(event.state.dept, null, true);
+                hideArcadePage(true);
+            } else if (event.state && event.state.view === 'arcade' && event.state.dept) {
+                openArcade(event.state.dept, true);
+            } else {
+                hideVedikettuPage(true);
+                hideArcadePage(true);
+                showHomeView(true);
+            }
+        });
+
+        // --- VIVA ARCADE GAME STATE & CONTROLS ---
+        let currentArcadeDept = "";
+        let arcadeCards = [];
+        let currentCardIndex = 0;
+        let arcadeStreak = 0;
+        let arcadeMaxStreak = 0;
+        let isSwiping = false;
+
+        function triggerFireball(onComplete) {
+            const cardArea = document.getElementById('arcade-card-area');
+            const streakContainer = document.getElementById('arcade-streak-container');
+            if (!cardArea || !streakContainer) {
+                if (onComplete) onComplete();
+                return;
+            }
+
+            const cardRect = cardArea.getBoundingClientRect();
+            const streakRect = streakContainer.getBoundingClientRect();
+
+            // Center of the flashcard relative to viewport
+            const startX = cardRect.left + cardRect.width / 2;
+            const startY = cardRect.top + cardRect.height / 2;
+
+            // Center of the top-right streak counter relative to viewport
+            const endX = streakRect.left + streakRect.width / 2;
+            const endY = streakRect.top + streakRect.height / 2;
+
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+
+            // Create fireball element
+            const fireball = document.createElement('div');
+            fireball.className = 'fixed z-[999] pointer-events-none select-none text-4xl flex items-center justify-center';
+            fireball.style.left = `${startX}px`;
+            fireball.style.top = `${startY}px`;
+            fireball.style.transform = 'translate(-50%, -50%)';
+            fireball.style.filter = 'drop-shadow(0 0 12px #f97316) drop-shadow(0 0 25px #ef4444) drop-shadow(0 0 40px #f59e0b)';
+            fireball.innerHTML = '🔥';
+
+            document.body.appendChild(fireball);
+
+            // Periodic spark generator
+            const sparkInterval = setInterval(() => {
+                const fbRect = fireball.getBoundingClientRect();
+                createSpark(fbRect.left + fbRect.width / 2, fbRect.top + fbRect.height / 2);
+            }, 30);
+
+            // Curved keyframes (arcs upwards relative to starting/ending positions)
+            const animation = fireball.animate([
+                { transform: 'translate(-50%, -50%) translate(0px, 0px) scale(0.8)', opacity: 0 },
+                { transform: `translate(-50%, -50%) translate(${deltaX * 0.3}px, ${deltaY * 0.3 - 100}px) scale(1.5)`, opacity: 1, offset: 0.3 },
+                { transform: `translate(-50%, -50%) translate(${deltaX * 0.7}px, ${deltaY * 0.7 - 50}px) scale(1.2)`, opacity: 1, offset: 0.7 },
+                { transform: `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px) scale(0.6)`, opacity: 0.8 }
+            ], {
+                duration: 450,
+                easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            });
+
+            animation.onfinish = () => {
+                clearInterval(sparkInterval);
+                fireball.remove();
+
+                // Trigger streak container bump animation
+                streakContainer.classList.add('streak-bump');
+                setTimeout(() => {
+                    streakContainer.classList.remove('streak-bump');
+                }, 300);
+
+                if (onComplete) onComplete();
+            };
+        }
+
+        function createSpark(x, y) {
+            const spark = document.createElement('div');
+            spark.className = 'fixed z-[998] pointer-events-none rounded-full bg-gradient-to-r from-amber-400 to-red-500';
+            
+            const size = Math.random() * 6 + 4;
+            spark.style.width = `${size}px`;
+            spark.style.height = `${size}px`;
+            spark.style.left = `${x}px`;
+            spark.style.top = `${y}px`;
+            spark.style.transform = 'translate(-50%, -50%)';
+            spark.style.filter = 'blur(1px) drop-shadow(0 0 4px #f97316)';
+            
+            document.body.appendChild(spark);
+            
+            const destX = (Math.random() - 0.5) * 40;
+            const destY = (Math.random() - 0.5) * 40;
+            
+            const anim = spark.animate([
+                { transform: 'translate(-50%, -50%) scale(1) translate(0, 0)', opacity: 0.8 },
+                { transform: `translate(-50%, -50%) scale(0) translate(${destX}px, ${destY}px)`, opacity: 0 }
+            ], {
+                duration: 300 + Math.random() * 200,
+                easing: 'ease-out'
+            });
+            
+            anim.onfinish = () => spark.remove();
+        }
+
+        // Cosmic background animation engine variables
+        let cosmicCanvas = null;
+        let cosmicCtx = null;
+        let cosmicAnimationId = null;
+        let stars = [];
+        let nebulae = [];
+
+        function initCosmicBackground() {
+            cosmicCanvas = document.getElementById('arcade-cosmic-canvas');
+            if (!cosmicCanvas) return;
+            
+            cosmicCtx = cosmicCanvas.getContext('2d');
+            resizeCosmicCanvas();
+            
+            window.addEventListener('resize', resizeCosmicCanvas);
+            
+            // Seed stars
+            stars = [];
+            const starCount = 80;
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * cosmicCanvas.width,
+                    y: Math.random() * cosmicCanvas.height,
+                    size: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random(),
+                    pulseSpeed: Math.random() * 0.02 + 0.005,
+                    direction: Math.random() > 0.5 ? 1 : -1,
+                    dx: (Math.random() - 0.5) * 0.1,
+                    dy: (Math.random() - 0.5) * 0.1
+                });
+            }
+            
+            // Seed nebulae (large colorful glowing blobs)
+            nebulae = [
+                {
+                    x: cosmicCanvas.width * 0.25,
+                    y: cosmicCanvas.height * 0.3,
+                    radius: Math.min(cosmicCanvas.width, cosmicCanvas.height) * 0.45,
+                    color: 'rgba(79, 70, 229, 0.08)', // Indigo
+                    dx: 0.05,
+                    dy: 0.03,
+                    angle: 0
+                },
+                {
+                    x: cosmicCanvas.width * 0.75,
+                    y: cosmicCanvas.height * 0.7,
+                    radius: Math.min(cosmicCanvas.width, cosmicCanvas.height) * 0.55,
+                    color: 'rgba(236, 72, 153, 0.06)', // Pink
+                    dx: -0.04,
+                    dy: 0.02,
+                    angle: Math.PI
+                },
+                {
+                    x: cosmicCanvas.width * 0.5,
+                    y: cosmicCanvas.height * 0.5,
+                    radius: Math.min(cosmicCanvas.width, cosmicCanvas.height) * 0.6,
+                    color: 'rgba(16, 185, 129, 0.04)', // Emerald green
+                    dx: 0.02,
+                    dy: -0.04,
+                    angle: Math.PI / 2
+                }
+            ];
+        }
+
+        function resizeCosmicCanvas() {
+            if (!cosmicCanvas) return;
+            cosmicCanvas.width = cosmicCanvas.clientWidth;
+            cosmicCanvas.height = cosmicCanvas.clientHeight;
+            
+            if (nebulae && nebulae.length > 0) {
+                const baseRadius = Math.min(cosmicCanvas.width, cosmicCanvas.height);
+                nebulae[0].radius = baseRadius * 0.45;
+                nebulae[1].radius = baseRadius * 0.55;
+                if (nebulae[2]) nebulae[2].radius = baseRadius * 0.6;
+            }
+        }
+
+        function startCosmicBackground() {
+            if (!cosmicCanvas) {
+                initCosmicBackground();
+            }
+            if (cosmicAnimationId) {
+                cancelAnimationFrame(cosmicAnimationId);
+            }
+            animateCosmicBackground();
+        }
+
+        function stopCosmicBackground() {
+            if (cosmicAnimationId) {
+                cancelAnimationFrame(cosmicAnimationId);
+                cosmicAnimationId = null;
+            }
+            window.removeEventListener('resize', resizeCosmicCanvas);
+        }
+
+        function animateCosmicBackground() {
+            if (!cosmicCtx || !cosmicCanvas) return;
+            
+            cosmicCtx.fillStyle = '#030712'; // Base dark gray-950 color
+            cosmicCtx.fillRect(0, 0, cosmicCanvas.width, cosmicCanvas.height);
+            
+            // Draw Nebulae
+            nebulae.forEach(neb => {
+                neb.angle += 0.001;
+                neb.x += Math.sin(neb.angle) * neb.dx;
+                neb.y += Math.cos(neb.angle) * neb.dy;
+                
+                if (neb.x < -neb.radius) neb.x = cosmicCanvas.width + neb.radius;
+                if (neb.x > cosmicCanvas.width + neb.radius) neb.x = -neb.radius;
+                if (neb.y < -neb.radius) neb.y = cosmicCanvas.height + neb.radius;
+                if (neb.y > cosmicCanvas.height + neb.radius) neb.y = -neb.radius;
+                
+                const gradient = cosmicCtx.createRadialGradient(
+                    neb.x, neb.y, 0,
+                    neb.x, neb.y, neb.radius
+                );
+                gradient.addColorStop(0, neb.color);
+                gradient.addColorStop(1, 'rgba(3, 7, 18, 0)');
+                
+                cosmicCtx.fillStyle = gradient;
+                cosmicCtx.beginPath();
+                cosmicCtx.arc(neb.x, neb.y, neb.radius, 0, Math.PI * 2);
+                cosmicCtx.fill();
+            });
+            
+            // Draw Stars
+            stars.forEach(star => {
+                star.x += star.dx;
+                star.y += star.dy;
+                
+                if (star.x < 0) star.x = cosmicCanvas.width;
+                if (star.x > cosmicCanvas.width) star.x = 0;
+                if (star.y < 0) star.y = cosmicCanvas.height;
+                if (star.y > cosmicCanvas.height) star.y = 0;
+                
+                star.alpha += star.pulseSpeed * star.direction;
+                if (star.alpha >= 1) {
+                    star.alpha = 1;
+                    star.direction = -1;
+                } else if (star.alpha <= 0.2) {
+                    star.alpha = 0.2;
+                    star.direction = 1;
+                }
+                
+                cosmicCtx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+                cosmicCtx.beginPath();
+                cosmicCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                cosmicCtx.fill();
+            });
+            
+            cosmicAnimationId = requestAnimationFrame(animateCosmicBackground);
+        }
+
+        function openArcade(departmentId, skipHistory = false, event = null) {
+            console.log("openArcade triggered for:", departmentId);
+            
+            const btn = event ? event.currentTarget : null;
+            if (btn && typeof burst === 'function') {
+                burst(btn, event);
+            }
+
+            const loadArcade = () => {
+                if (!skipHistory && window.history.pushState) {
+                    window.history.pushState({ view: 'arcade', dept: departmentId }, '', '?arcade=' + departmentId);
+                }
+                
+                // Hide other views
+                hideVedikettuPage(true);
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('mainLabView').classList.add('hidden');
+                const vedikettuView = document.getElementById('vedikettu-view');
+                if (vedikettuView) vedikettuView.classList.add('hidden');
+                const pdfView = document.getElementById('pdf-fullscreen-view');
+                if (pdfView) pdfView.classList.add('hidden');
+
+                // Show dedicated full-screen view
+                const arcadeView = document.getElementById('viva-arcade-view');
+                if (arcadeView) {
+                    arcadeView.classList.remove('hidden');
+                    arcadeView.classList.add('flex');
+                    startCosmicBackground();
+                }
+
+                // Retrieve correct flashcard array
+                if (window.vivaQuestions && window.vivaQuestions[departmentId] && window.vivaQuestions[departmentId].flashcards) {
+                    arcadeCards = window.vivaQuestions[departmentId].flashcards;
+                } else {
+                    arcadeCards = [];
+                }
+
+                // Reset state
+                currentCardIndex = 0;
+                arcadeStreak = 0;
+                arcadeMaxStreak = 0;
+
+                // Sync stats inside navbar
+                const streakText = document.getElementById('arcade-streak-text');
+                if (streakText) {
+                    streakText.textContent = `${arcadeStreak} 🔥`;
+                }
+
+                currentArcadeDept = departmentId;
+                renderArcadeUI();
+            };
+
+            if (btn) {
+                // If clicked from menu card, trigger warp effect for dopamine boost!
+                const homeView = document.getElementById('home-view');
+                if (homeView) {
+                    homeView.style.transition = 'opacity 0.3s ease';
+                    homeView.style.opacity = '0';
+                    homeView.style.pointerEvents = 'none';
+                }
+                setTimeout(() => {
+                    triggerWarp(loadArcade);
+                }, 100);
+            } else {
+                loadArcade();
+            }
+        }
+
+        function closeArcade(skipHistory = false) {
+            if (!skipHistory) {
+                if (window.history.state && window.history.state.view === 'arcade') {
+                    window.history.back();
+                    return;
+                }
+            }
+            hideArcadePage(true);
+            showHomeView(true);
+        }
+
+        function hideArcadePage(skipHistory = false) {
+            const arcadeView = document.getElementById('viva-arcade-view');
+            if (arcadeView) {
+                arcadeView.classList.add('hidden');
+                arcadeView.classList.remove('flex');
+            }
+            stopCosmicBackground();
+            if (!skipHistory && window.history.pushState) {
+                window.history.pushState(null, '', window.location.pathname);
+            }
+        }
+
+        function openArcadeFromSidebar() {
+            const deptCode = document.getElementById('deptSelect').value;
+            openArcade(deptCode);
+        }
+
+        function renderArcadeUI() {
+            const mainContent = document.getElementById('viva-arcade-main-content');
+            if (!mainContent) return;
+
+            if (arcadeCards.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20 text-center bg-gray-900 border border-white/5 shadow-2xl rounded-3xl max-w-md mx-auto p-8 animate-[toast-in_0.3s_ease_forwards] w-full">
+                        <div class="w-20 h-20 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mb-6 shadow-inner ring-4 ring-rose-500/5">
+                            <i data-lucide="gamepad-2" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-black mb-3 text-white">No Flashcards Yet</h3>
+                        <p class="text-slate-400 max-w-xs mx-auto mb-8 font-medium">We don't have viva arcade questions for ${currentArcadeDept} yet. If you have some, help out by contributing!</p>
+                        <button onclick="openContributeModal()" class="bg-brand text-white px-8 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-transform shadow-lg shadow-brand/30 flex items-center gap-2 justify-center"><i data-lucide="upload" class="w-4 h-4"></i> Contribute Questions</button>
+                    </div>
+                `;
+                if (window.lucide) window.lucide.createIcons();
+                return;
+            }
+
+            mainContent.innerHTML = `
+                <div id="viva-arcade-view-content" class="w-full flex items-stretch justify-center gap-3 sm:gap-6 md:gap-8 max-w-5xl px-2 sm:px-4 mt-6 z-10 relative">
+                    <!-- Forgot Swipe Zone (Left) -->
+                    <div id="forgot-zone" onclick="handleArcadeAction(false)" 
+                         class="flex flex-col items-center justify-center cursor-pointer select-none rounded-3xl w-16 sm:w-20 md:w-32 self-stretch p-2 text-rose-500/70 hover:text-rose-400">
+                        <div class="flex flex-col items-center justify-center gap-2 text-center">
+                            <span class="text-2xl sm:text-3xl md:text-4xl filter drop-shadow-[0_0_8px_rgba(244,63,94,0.3)]">❌</span>
+                            <span class="hidden sm:block uppercase tracking-widest text-[10px] sm:text-xs md:text-sm font-black select-none">Forgot</span>
+                        </div>
+                    </div>
+
+                    <!-- Center Playing Card Column -->
+                    <div class="flex flex-col items-center justify-center flex-1 max-w-md">
+                        <!-- Progress bar counter -->
+                        <div class="mb-4 text-center">
+                            <span id="arcade-progress-text" class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 code-font">Card 1 of ${arcadeCards.length}</span>
+                        </div>
+                        
+                        <div id="arcade-card-area" class="w-full aspect-[4/5] sm:h-[480px] perspective-1000 relative select-none">
+                            <div id="flashcard-inner" class="flashcard-inner" onclick="this.classList.toggle('flipped')">
+                                <!-- Front of Card (Question) -->
+                                <div class="flashcard-front bg-gray-900 border border-white/5 ring-1 ring-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-3xl p-6 md:p-8 flex flex-col justify-between">
+                                    <div class="w-full flex items-center justify-between text-slate-500 text-xs uppercase tracking-widest border-b border-white/5 pb-3">
+                                        <span>Question</span>
+                                        <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    </div>
+                                    <div class="flex-1 flex items-center justify-center py-6 w-full flex-col">
+                                        <p id="arcade-question-text" class="text-xl md:text-2xl font-black text-center leading-relaxed text-white break-words w-full px-2"></p>
+                                    </div>
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest animate-pulse flex items-center gap-1.5 justify-center"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Tap to reveal answer</span>
+                                </div>
+                                
+                                <!-- Back of Card (Answer) -->
+                                <div class="flashcard-back bg-gray-900 border border-white/5 ring-1 ring-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-3xl p-6 md:p-8 flex flex-col justify-between">
+                                    <div class="w-full flex items-center justify-between text-brand text-xs uppercase tracking-widest border-b border-white/5 pb-3">
+                                        <span>Answer</span>
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-brand"></i>
+                                    </div>
+                                    <div class="flex-1 flex items-center justify-center py-6 overflow-y-auto max-h-[260px] w-full px-2 flex-col">
+                                        <p id="arcade-answer-text" class="text-base md:text-lg font-semibold text-center leading-relaxed text-slate-200 break-words w-full"></p>
+                                    </div>
+                                    <span class="text-[10px] text-brand/60 font-bold uppercase tracking-widest flex items-center gap-1.5 justify-center"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Tap to view question</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Got It Swipe Zone (Right) -->
+                    <div id="got-it-zone" onclick="handleArcadeAction(true)" 
+                         class="flex flex-col items-center justify-center cursor-pointer select-none rounded-3xl w-16 sm:w-20 md:w-32 self-stretch p-2 text-green-500/70 hover:text-green-400">
+                        <div class="flex flex-col items-center justify-center gap-2 text-center">
+                            <span class="text-2xl sm:text-3xl md:text-4xl filter drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]">✅</span>
+                            <span class="hidden sm:block uppercase tracking-widest text-[10px] sm:text-xs md:text-sm font-black select-none">Got It</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="arcade-completion-view" class="hidden flex-col items-center justify-center text-center p-8 md:p-12 bg-gray-900 border border-white/5 ring-1 ring-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-3xl max-w-md w-full animate-[toast-in_0.3s_ease_forwards]">
+                    <div class="w-20 h-20 bg-brand/10 text-brand rounded-full flex items-center justify-center mb-6 shadow-inner ring-4 ring-brand/5">
+                        <i data-lucide="trophy" class="w-10 h-10 animate-bounce"></i>
+                    </div>
+                    <h3 class="text-3xl font-black mb-3 text-white">Deck Completed! 🎉</h3>
+                    <p class="text-slate-400 text-sm max-w-sm mx-auto mb-8 font-medium">Excellent work! You've reviewed all the flashcards in this department.</p>
+                    
+                    <div class="w-full grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-gray-950 p-4 rounded-2xl border border-white/5">
+                            <span class="block text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Max Streak</span>
+                            <span id="completion-max-streak" class="text-2xl font-black text-rose-500 code-font">0 🔥</span>
+                        </div>
+                        <div class="bg-gray-950 p-4 rounded-2xl border border-white/5">
+                            <span class="block text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Cards Studied</span>
+                            <span id="completion-total-cards" class="text-2xl font-black text-brand code-font">0</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 w-full">
+                        <button onclick="restartArcade()" class="w-full bg-brand text-white font-black py-3.5 rounded-xl hover:scale-[1.02] active:scale-95 transition-transform shadow-lg shadow-brand/30 flex items-center justify-center gap-2 text-xs uppercase tracking-widest min-h-[44px]">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Restart Deck
+                        </button>
+                        <button onclick="closeArcade()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3.5 rounded-xl transition-colors text-xs uppercase tracking-widest min-h-[44px]">
+                            Exit Arcade
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            if (window.lucide) window.lucide.createIcons();
+            showCard(currentCardIndex);
+        }
+
+        function showCard(index) {
+            if (index < 0 || index >= arcadeCards.length) return;
+
+            const questionText = document.getElementById('arcade-question-text');
+            const answerText = document.getElementById('arcade-answer-text');
+            const progressText = document.getElementById('arcade-progress-text');
+            const innerCard = document.getElementById('flashcard-inner');
+
+            if (!questionText || !answerText || !progressText) return;
+
+            // Ensure the card starts on the question side
+            if (innerCard) {
+                innerCard.classList.remove('flipped');
+            }
+
+            // Populate text content
+            questionText.textContent = arcadeCards[index].question;
+            answerText.textContent = arcadeCards[index].answer;
+
+            // Update counter
+            progressText.textContent = `Card ${index + 1} of ${arcadeCards.length}`;
+        }
+
+        function handleArcadeAction(isCorrect) {
+            if (isSwiping) return;
+
+            const cardArea = document.getElementById('arcade-card-area');
+            const innerCard = document.getElementById('flashcard-inner');
+            const mainContent = document.getElementById('viva-arcade-view-content');
+            const completionView = document.getElementById('arcade-completion-view');
+
+            if (!cardArea) return;
+            isSwiping = true;
+
+            // Apply swipe classes
+            if (isCorrect) {
+                cardArea.classList.add('swipe-right');
+            } else {
+                cardArea.classList.add('swipe-left');
+            }
+
+            // Function to proceed to the next card / complete deck
+            const proceedToNext = () => {
+                currentCardIndex++;
+
+                // Ensure the card is not flipped when loading the next question
+                if (innerCard && innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+
+                if (currentCardIndex < arcadeCards.length) {
+                    showCard(currentCardIndex);
+
+                    // Tinder Reset and Entry Animation:
+                    // 1. Temporarily turn off transitions so resets happen instantly
+                    cardArea.style.transition = 'none';
+                    // 2. Clear swipe class, instantly position card scaled down & invisible
+                    cardArea.classList.remove('swipe-left', 'swipe-right');
+                    cardArea.style.transform = 'scale(0.8)';
+                    cardArea.style.opacity = '0';
+                    
+                    // 3. Force reflow to register the new layout state
+                    cardArea.offsetHeight;
+
+                    // 4. Re-enable transitions for transform and opacity
+                    cardArea.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+                    // 5. Clean up inline styles so it transitions back to scale 1 / opacity 1 smoothly
+                    cardArea.style.transform = '';
+                    cardArea.style.opacity = '';
+                    
+                    isSwiping = false;
+                } else {
+                    // Deck complete
+                    if (mainContent) mainContent.classList.add('hidden');
+                    if (completionView) {
+                        completionView.classList.remove('hidden');
+                        completionView.classList.add('flex');
+                        
+                        const maxStreakEl = document.getElementById('completion-max-streak');
+                        const totalCardsEl = document.getElementById('completion-total-cards');
+                        if (maxStreakEl) maxStreakEl.textContent = `${arcadeMaxStreak} 🔥`;
+                        if (totalCardsEl) totalCardsEl.textContent = `${arcadeCards.length}`;
+                    }
+
+                    // Completion confetti shower
+                    if (window.confetti) {
+                        confetti({
+                            particleCount: 120,
+                            spread: 80,
+                            origin: { y: 0.6 },
+                            colors: ['#10b981', '#3b82f6', '#f59e0b', '#ffffff']
+                        });
+                    }
+                    if (window.lucide) window.lucide.createIcons();
+                    
+                    isSwiping = false;
+                }
+            };
+
+            // Sequence streak updates and delays
+            if (isCorrect) {
+                // Got It! Trigger fireball animation. Streak increments upon hitting the target.
+                triggerFireball(() => {
+                    arcadeStreak++;
+                    if (arcadeStreak > arcadeMaxStreak) {
+                        arcadeMaxStreak = arcadeStreak;
+                    }
+                    const streakText = document.getElementById('arcade-streak-text');
+                    if (streakText) {
+                        streakText.textContent = `${arcadeStreak} 🔥`;
+                    }
+                });
+
+                // Wait 500ms for card swipe to complete, then load next card
+                setTimeout(proceedToNext, 500);
+            } else {
+                // Forgot! Reset streak immediately
+                arcadeStreak = 0;
+                const streakText = document.getElementById('arcade-streak-text');
+                if (streakText) {
+                    streakText.textContent = `${arcadeStreak} 🔥`;
+                }
+
+                // Wait 500ms for card swipe to complete, then load next card
+                setTimeout(proceedToNext, 500);
+            }
+        }
+
+        function restartArcade() {
+            currentCardIndex = 0;
+            arcadeStreak = 0;
+            isSwiping = false;
+            
+            const cardArea = document.getElementById('arcade-card-area');
+            if (cardArea) {
+                cardArea.style.transition = 'none';
+                cardArea.classList.remove('swipe-left', 'swipe-right');
+                cardArea.style.transform = '';
+                cardArea.style.opacity = '';
+                cardArea.offsetHeight;
+                cardArea.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+            }
+
+            const mainContent = document.getElementById('viva-arcade-view-content');
+            const completionView = document.getElementById('arcade-completion-view');
+            if (mainContent) mainContent.classList.remove('hidden');
+            if (completionView) {
+                completionView.classList.add('hidden');
+                completionView.classList.remove('flex');
+            }
+
+            const streakText = document.getElementById('arcade-streak-text');
+            if (streakText) {
+                streakText.textContent = `${arcadeStreak} 🔥`;
+            }
+
+            showCard(currentCardIndex);
+        }
+
+        initSidebar(); renderLabs(); fetchLabsData();
+    </script>
+
+    <!-- Share Modal -->
+    <div id="shareModal"
+        class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[3500] hidden flex-col items-center justify-center no-print">
+        <div
+            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl w-full max-w-lg mx-4 overflow-hidden">
+            <!-- Header -->
+            <div class="p-6 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white">Help a classmate pass! 🚀</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 font-medium">Send this to your study group right now.</p>
+                </div>
+                <button onclick="closeShareModal()" class="text-slate-400 hover:text-red-500 transition-colors p-1"><i
+                        data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <!-- Message Preview -->
+            <div class="p-6">
+                <div
+                    class="relative bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-white/10">
+                    <p id="shareMessageText"
+                        class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">S6 Lab codes are
+                        all here:
+                        https://ktulab.pages.dev/</p>
+                    <button id="copyShareBtn" onclick="copyShareMessage()"
+                        class="mt-4 flex items-center gap-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black px-4 py-2 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copy Message
+                    </button>
+                </div>
+
+                <!-- WhatsApp Button -->
+                <button onclick="shareOnWhatsApp()"
+                    class="mt-4 w-full flex items-center justify-center gap-3 bg-[#25d366] hover:bg-[#1db954] text-white font-black py-3.5 rounded-2xl transition-colors shadow-lg shadow-green-500/20 text-sm">
+                    <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Share on WhatsApp
+                </button>
+
+                <!-- Social Proof -->
+                <p class="text-center text-xs text-slate-400 font-medium mt-4">
+                    🔥 <span class="text-brand font-black">200+ students</span> shared this with their class this week!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dedicated Full-Screen Viva Arcade View -->
+    <div id="viva-arcade-view" class="hidden fixed inset-0 min-h-screen flex flex-col items-center justify-center bg-gray-950 z-[150] p-4 md:p-8 text-white overflow-hidden no-print">
+        <!-- Live Cosmic Background Canvas -->
+        <canvas id="arcade-cosmic-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+        <!-- Floating top navigation bar specific to this view -->
+        <nav class="absolute top-0 left-0 right-0 p-4 md:p-6 flex items-center justify-between border-b border-white/5 bg-gray-950/80 backdrop-blur-md z-10">
+            <button onclick="closeArcade()" class="flex items-center gap-2 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 transition-all rounded-xl px-4 py-2 font-black text-sm uppercase tracking-widest border border-white/10">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Exit Arcade
+            </button>
+            <div id="arcade-streak-container" class="flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded-2xl shadow-[0_0_15px_rgba(244,63,94,0.15)] transition-transform duration-300">
+                <span class="text-xs font-black uppercase tracking-widest text-rose-400">Streak:</span>
+                <span id="arcade-streak-text" class="text-sm font-black text-rose-400 code-font">0 🔥</span>
+            </div>
+        </nav>
+
+        <!-- Main Arcade Container (Centered Content) -->
+        <div id="viva-arcade-main-content" class="w-full max-w-lg mt-20 flex flex-col items-center justify-center flex-1">
+            <!-- Dynamic content injected here: card area & controls, or completion state, or fallback -->
+        </div>
+    </div>
+
+    <!-- Full-Screen Vedikettu / PDF Viewer SPA View -->
+    <div id="pdf-fullscreen-view" class="hidden fixed inset-0 z-50 flex flex-col bg-gray-950">
+        <!-- Top Nav Bar -->
+        <div class="flex items-center justify-between gap-4 px-4 py-3 bg-gray-900 border-b border-gray-700 shrink-0">
+            <!-- Back Button -->
+            <button onclick="hideVedikettuPage()" class="flex items-center gap-2 text-gray-300 hover:text-white bg-white/10 hover:bg-white/20 transition-all rounded-xl px-4 py-2 font-bold text-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">← Back to Vedikettu</span>
+            </button>
+
+            <!-- Dynamic Title -->
+            <h3 id="pdf-view-title" class="text-base font-black text-white flex-1 text-center truncate">📄 Document Preview</h3>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+                <button onclick="shareCurrentNotes()" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-2 px-4 rounded-xl shadow-md hover:scale-105 transition-transform text-sm">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">Share</span> 🧨
+                </button>
+                <a id="pdf-view-download-btn" href="#" download class="flex items-center gap-2 bg-brand text-white font-black px-4 py-2 rounded-xl hover:bg-brand/90 transition-all shadow-lg animate-pulse pulse-glow-green text-sm">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">Download</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- PDF Iframe — takes all remaining height -->
+        <div class="relative flex-1 min-h-0 w-full bg-gray-900">
+
+            <!-- Loading Overlay -->
+            <div id="pdf-loading-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-10">
+                <!-- Spinner -->
+                <div class="w-14 h-14 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <p id="pdf-loading-text" class="mt-5 text-gray-300 font-semibold text-sm tracking-wide">Loading PDF...</p>
+
+                <!-- Fallback message (hidden by default) -->
+                <div id="pdf-fallback-message" class="hidden mt-6 max-w-xs text-center px-4">
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Viewer taking too long or showing a blank screen?<br>
+                        <span class="text-white font-bold">Tap the Download button</span> to view the file instantly.
+                    </p>
+                    <div class="animate-bounce text-3xl mt-3 text-white">&#8595;</div>
+                </div>
+            </div>
+
+            <iframe
+                id="pdf-view-frame"
+                src=""
+                class="w-full h-full min-h-[80vh] border-none bg-gray-800"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Floating Rocket Share Button (Mobile Only) -->
+    <button onclick="openShareModal()"
+        class="rocket-share-btn pulse-glow-green md:hidden fixed bottom-24 right-6 z-[200] flex items-center justify-center w-14 h-14 rounded-full text-white shadow-lg focus:outline-none hover:scale-110 active:scale-95 transition-transform"
+        title="Share with Friends">
+        <i data-lucide="rocket" class="rocket-icon w-6 h-6"></i>
+    </button>
+
+    <!-- Persistent Space Starfield Background -->
+    <canvas id="space-canvas"
+        class="fixed inset-0 w-full h-full pointer-events-none z-0 bg-[#060814] transition-opacity duration-300"></canvas>
+
+</body>
+
+</html>
